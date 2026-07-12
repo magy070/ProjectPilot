@@ -3,6 +3,7 @@ import Project from '../models/Project.js';
 import User from '../models/User.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { validate, projectQuerySchema } from '../middleware/validation.js';
+import * as aiService from '../services/ai/aiService.js';
 
 const router = express.Router();
 
@@ -87,6 +88,38 @@ router.get('/recommendations', protect, async (req, res, next) => {
       success: true,
       count: rankedProjects.length,
       projects: rankedProjects
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @desc    Generate personalized project ideas with AI
+// @route   POST /api/projects/generate
+// @access  Private
+router.post('/generate', protect, async (req, res, next) => {
+  try {
+    const { domain, difficulty } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Call service to generate 3 customized projects
+    const rawIdeas = await aiService.generateProjectIdeas(
+      domain || (user.interests.length > 0 ? user.interests[0] : 'Web Dev'),
+      difficulty || 'Intermediate',
+      user.skills,
+      user.interests
+    );
+
+    // Save generated ideas to Project database so they can be matched and bookmarked
+    const createdProjects = await Project.insertMany(rawIdeas);
+
+    res.status(201).json({
+      success: true,
+      projects: createdProjects
     });
   } catch (error) {
     next(error);

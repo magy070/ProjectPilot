@@ -43,3 +43,54 @@ ${project.features.map((feat, i) => `- ${feat}`).join('\n')}
 
 Please output complete, runnable code files for step 1 and step 2, and guide me on how to proceed.`;
 };
+
+export const generateProjectIdeas = async (domain, difficulty, skills, interests) => {
+  // Return static mock values based on inputs as a fallback
+  return [
+    {
+      name: `AI-Generated ${domain || 'Web'} Project Alpha`,
+      description: `A custom generated plan leveraging ${skills?.slice(0, 3).join(', ') || 'React'} for solving optimization bottlenecks.`,
+      problemStatement: `Inefficient workflows cause delays for users, which can be mitigated with modern ${domain || 'software'} structures.`,
+      objectives: ["Analyze requirement guidelines", "Model schema relationships", "Execute test scripts"],
+      features: ["Interactive user onboarding", "Dynamic parameters dashboard", "Stats report exporter"],
+      techStack: [...(skills || ['React', 'Node.js']), 'MongoDB', 'Tailwind CSS'],
+      requiredSkills: skills || ['React', 'Node.js'],
+      difficulty: difficulty || 'Intermediate',
+      estimatedTime: '1 Month',
+      resumeValue: 'High: Shows capabilities in designing tailored software algorithms.',
+      feasibilityScore: 90,
+      teamSize: 2,
+      domain: domain || 'Web Dev'
+    },
+    {
+      name: `AI-Generated ${domain || 'Web'} Project Beta`,
+      description: `A responsive framework focused on security and low-latency metrics.`,
+      problemStatement: `Security threats and data leakage remain a primary risk in centralized applications.`,
+      objectives: ["Setup route verification middleware", "Add end-to-end encryption", "Optimize query performance"],
+      features: ["Token-based authentication", "Asset files compression", "Audit logs ledger"],
+      techStack: [...(skills || ['React', 'Node.js']), 'Mongoose', 'Express'],
+      requiredSkills: skills || ['React', 'Node.js'],
+      difficulty: difficulty || 'Intermediate',
+      estimatedTime: '2 Weeks',
+      resumeValue: 'Outstanding: Reflects secure programming practices and solid architectural bounds.',
+      feasibilityScore: 85,
+      teamSize: 1,
+      domain: domain || 'Web Dev'
+    },
+    {
+      name: `AI-Generated ${domain || 'Web'} Project Gamma`,
+      description: `A multi-tenant dashboard demonstrating advanced analytical queries.`,
+      problemStatement: `Analyzing large-scale logs leaves developers digging through text files without visual aids.`,
+      objectives: ["Collect sensor or system event logs", "Build real-time charts", "Configure threshold alert toggles"],
+      features: ["Log ingest files parser", "Glow-accented analytics charts", "Email alert notification stubs"],
+      techStack: [...(skills || ['React', 'Node.js']), 'Chart.js', 'MongoDB'],
+      requiredSkills: skills || ['React', 'Node.js'],
+      difficulty: difficulty || 'Intermediate',
+      estimatedTime: '2 Months',
+      resumeValue: 'High: Focuses on streaming log integrations and complex frontend reporting engines.',
+      feasibilityScore: 88,
+      teamSize: 3,
+      domain: domain || 'Web Dev'
+    }
+  ];
+};

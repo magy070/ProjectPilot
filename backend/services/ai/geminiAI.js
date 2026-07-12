@@ -53,3 +53,38 @@ Provide detailed folder structures, model layouts, and component templates. Retu
   const result = await model.generateContent(prompt);
   return result.response.text();
 };
+
+export const generateProjectIdeas = async (domain, difficulty, skills, interests) => {
+  const model = getModel();
+  const prompt = `You are an expert software project architect.
+Generate EXACTLY 3 unique, creative, and highly detailed software project ideas matching these criteria:
+- Domain: ${domain || 'Web Dev'}
+- Difficulty: ${difficulty || 'Intermediate'}
+- Target Skills: ${skills?.join(', ') || 'React, Node.js'}
+- Interests: ${interests?.join(', ') || 'Web Development'}
+
+Return ONLY a valid JSON array of objects matching this exact database schema:
+[
+  {
+    "name": "Project Name",
+    "description": "Short description of what the project does",
+    "problemStatement": "Detailed problem this project solves",
+    "objectives": ["Objective 1", "Objective 2", "Objective 3"],
+    "features": ["Feature 1", "Feature 2", "Feature 3", "Feature 4"],
+    "techStack": ["React", "Express", "MongoDB", "Tailwind CSS"],
+    "requiredSkills": ["React", "Node.js"],
+    "difficulty": "${difficulty || 'Intermediate'}",
+    "estimatedTime": "1 Month",
+    "resumeValue": "Explanation of how this adds value to a resume/CV",
+    "feasibilityScore": 85,
+    "teamSize": 2,
+    "domain": "${domain || 'Web Dev'}"
+  }
+]
+Do not wrap response in markdown code blocks (no \`\`\`json), return raw JSON.`;
+
+  const result = await model.generateContent(prompt);
+  const text = result.response.text();
+  const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+  return JSON.parse(cleaned);
+};

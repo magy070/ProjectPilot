@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [compareList, setCompareList] = useState([]); // selected project objects
+  const [isBrainstorming, setIsBrainstorming] = useState(false);
 
   // 1. Fetch Stats
   const { data: statsData, isLoading: statsLoading } = useQuery({
@@ -86,6 +87,26 @@ export default function Dashboard() {
     }
     const ids = compareList.map(p => p._id).join(',');
     navigate(`/compare?ids=${ids}`);
+  };
+
+  const handleBrainstorm = async () => {
+    setIsBrainstorming(true);
+    try {
+      const res = await api.post('/api/projects/generate', {
+        domain: selectedDomain,
+        difficulty: selectedDifficulty
+      });
+      if (res.data.success) {
+        queryClient.invalidateQueries({ queryKey: ['recommendations'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboardStats'] });
+        alert("Gemini AI successfully generated 3 new custom projects! Check your feed.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate AI projects. Please check your credentials or try again.");
+    } finally {
+      setIsBrainstorming(false);
+    }
   };
 
   // Filter projects by domain / difficulty
@@ -226,6 +247,24 @@ export default function Dashboard() {
                   Reset Filters
                 </Button>
               )}
+            </Card>
+
+            {/* Brainstorm Card */}
+            <Card className="border border-primary/20 bg-gradient-to-b from-primary/5 to-transparent p-6 space-y-4">
+              <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                <Sparkles size={16} className="text-primary animate-pulse" /> Brainstorm with AI
+              </h3>
+              <p className="text-xs text-muted leading-relaxed">
+                Generate 3 brand-new project proposals tailored to your currently selected filters and stack.
+              </p>
+              <Button
+                variant="glow"
+                className="w-full py-2.5 text-xs"
+                onClick={handleBrainstorm}
+                disabled={isBrainstorming}
+              >
+                {isBrainstorming ? 'Brainstorming...' : 'Generate New Ideas'}
+              </Button>
             </Card>
 
             {/* Quick Actions Card */}

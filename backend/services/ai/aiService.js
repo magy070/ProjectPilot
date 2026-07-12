@@ -34,3 +34,18 @@ export const generateDeveloperPrompt = async (project) => {
     return await templateAI.generateDeveloperPrompt(project);
   }
 };
+
+export const generateProjectIdeas = async (domain, difficulty, skills, interests) => {
+  if (isGeminiAvailable()) {
+    try {
+      console.log('[AI Service] Routing to Gemini API (Project Ideas Generation)...');
+      return await geminiAI.generateProjectIdeas(domain, difficulty, skills, interests);
+    } catch (error) {
+      console.warn('[AI Service] Gemini failed, falling back to local templates:', error.message);
+      return await templateAI.generateProjectIdeas(domain, difficulty, skills, interests);
+    }
+  } else {
+    console.log('[AI Service] GEMINI_API_KEY missing, using local template project generator.');
+    return await templateAI.generateProjectIdeas(domain, difficulty, skills, interests);
+  }
+};
