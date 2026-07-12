@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import Button from './Button.jsx';
+import Logo from './Logo.jsx';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -32,13 +33,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         
         {/* Logo */}
-        <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
-            <span className="font-extrabold text-white text-sm">P</span>
-          </div>
-          <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white to-muted bg-clip-text text-transparent">
-            ProjectPilot
-          </span>
+        <Link to={user ? "/dashboard" : "/"}>
+          <Logo size="md" showSubtitle={true} />
         </Link>
 
         {/* Links */}

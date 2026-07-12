@@ -7,6 +7,7 @@ import Card from '../components/Card.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
 import Badge from '../components/Badge.jsx';
+import Logo from '../components/Logo.jsx';
 
 export default function AuthPages() {
   const { login, register, user } = useAuth();
@@ -102,14 +103,14 @@ export default function AuthPages() {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="w-full max-w-xl z-10 py-12"
       >
-        <div className="text-center mb-8">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary items-center justify-center shadow-lg shadow-primary/20 mb-4">
-            <span className="font-extrabold text-white text-xl">P</span>
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="mb-3">
+            <Logo size="lg" showText={false} />
           </div>
           <h2 className="text-title font-extrabold bg-gradient-to-b from-white to-muted bg-clip-text text-transparent">
             Welcome to ProjectPilot
           </h2>
-          <p className="text-sm text-muted mt-1">
+          <p className="text-sm text-muted mt-1.5">
             Analyze tech designs, generate synopses, and build roadmap schedules.
           </p>
         </div>
