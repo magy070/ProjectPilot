@@ -5,7 +5,7 @@ const getModel = () => {
     throw new Error('GEMINI_API_KEY is not defined in environment variables');
   }
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  return genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  return genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 };
 
 export const generateSynopsis = async (project) => {
