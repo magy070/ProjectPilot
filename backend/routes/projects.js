@@ -155,19 +155,25 @@ router.post('/import', protect, async (req, res, next) => {
   try {
     const projectData = req.body;
     
-    // Create new project entry in the DB
+    // Normalize difficulty enum value
+    let difficultyVal = 'Intermediate';
+    if (projectData.difficulty && ['Beginner', 'Intermediate', 'Advanced'].includes(projectData.difficulty)) {
+      difficultyVal = projectData.difficulty;
+    }
+
+    // Create new project entry in the DB with strong defaults for required schema fields
     const newProject = await Project.create({
-      name: projectData.name,
-      description: projectData.description,
-      problemStatement: projectData.problemStatement || '',
+      name: projectData.name || 'AI Brainstormed Project',
+      description: projectData.description || 'A custom project proposed by the AI Co-Pilot.',
+      problemStatement: projectData.problemStatement || `Currently, developers lack custom sandbox tools to build a ${projectData.name || 'custom solution'}.`,
       objectives: projectData.objectives || [],
       features: projectData.features || [],
       techStack: projectData.techStack || [],
       requiredSkills: projectData.requiredSkills || [],
-      difficulty: projectData.difficulty || 'Intermediate',
+      difficulty: difficultyVal,
       estimatedTime: projectData.estimatedTime || '1 Month',
-      resumeValue: projectData.resumeValue || '',
-      teamSize: projectData.teamSize || 2,
+      resumeValue: projectData.resumeValue || `Demonstrates standard integration of a ${projectData.name || 'custom app'} stack.`,
+      teamSize: parseInt(projectData.teamSize) || 2,
       domain: projectData.domain || 'Web Dev'
     });
 
