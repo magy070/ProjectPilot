@@ -211,6 +211,7 @@ export default function AICoPilotChat() {
                   onChange={(e) => setEstimatedTime(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50"
                 >
+                  <option value="1 Week" className="bg-[#0e0e11] text-white">1 Week</option>
                   <option value="2 Weeks" className="bg-[#0e0e11] text-white">2 Weeks</option>
                   <option value="1 Month" className="bg-[#0e0e11] text-white">1 Month</option>
                   <option value="2 Months" className="bg-[#0e0e11] text-white">2 Months</option>
