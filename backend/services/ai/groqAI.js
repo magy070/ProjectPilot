@@ -81,30 +81,33 @@ Generate EXACTLY 3 unique, creative, and highly detailed software project ideas 
 - Target Skills: ${skills?.join(', ') || 'React, Node.js'}
 - Interests: ${interests?.join(', ') || 'Web Development'}
 
-Return ONLY a valid JSON array of objects matching this exact database schema:
-[
-  {
-    "name": "Project Name",
-    "description": "Short description of what the project does",
-    "problemStatement": "Detailed problem this project solves",
-    "objectives": ["Objective 1", "Objective 2", "Objective 3"],
-    "features": ["Feature 1", "Feature 2", "Feature 3", "Feature 4"],
-    "techStack": ["React", "Express", "MongoDB", "Tailwind CSS"],
-    "requiredSkills": ["React", "Node.js"],
-    "difficulty": "${difficulty || 'Intermediate'}",
-    "estimatedTime": "1 Month",
-    "resumeValue": "Explanation of how this adds value to a resume/CV",
-    "feasibilityScore": 85,
-    "teamSize": 2,
-    "domain": "${domain || 'Web Dev'}"
-  }
-]`;
+Return ONLY a valid JSON object containing a "projects" array of objects matching this exact database schema:
+{
+  "projects": [
+    {
+      "name": "Project Name",
+      "description": "Short description of what the project does",
+      "problemStatement": "Detailed problem this project solves",
+      "objectives": ["Objective 1", "Objective 2", "Objective 3"],
+      "features": ["Feature 1", "Feature 2", "Feature 3", "Feature 4"],
+      "techStack": ["React", "Express", "MongoDB", "Tailwind CSS"],
+      "requiredSkills": ["React", "Node.js"],
+      "difficulty": "${difficulty || 'Intermediate'}",
+      "estimatedTime": "1 Month",
+      "resumeValue": "Explanation of how this adds value to a resume/CV",
+      "feasibilityScore": 85,
+      "teamSize": 2,
+      "domain": "${domain || 'Web Dev'}"
+    }
+  ]
+}`;
 
   const reply = await callGroq([
     { role: 'user', content: prompt }
   ], true);
 
-  return JSON.parse(reply);
+  const parsed = JSON.parse(reply);
+  return parsed.projects || parsed;
 };
 
 export const chatWithCoach = async (message, history, parameters) => {
