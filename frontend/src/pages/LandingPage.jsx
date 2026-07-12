@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Sparkles, ArrowRight, CheckCircle, Database, GitBranch, RefreshCw, BarChart2, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../components/Button.jsx';
@@ -18,7 +18,21 @@ const stagger = {
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [promptInput, setPromptInput] = useState('');
+
+  // Handle cross-page scrolling on load
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 150); // delay ensures framer motion entrances settle
+      }
+    }
+  }, [location]);
 
   const chips = ['AI/ML', 'Blockchain', 'Web Dev', 'Cybersecurity', 'Cloud', 'IoT'];
 

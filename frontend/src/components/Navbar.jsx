@@ -15,6 +15,18 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
   
+  const handleNavScroll = (e, targetId) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(`/#${targetId}`);
+    }
+  };
+
   return (
     <nav className="border-b border-white/5 bg-background/50 backdrop-blur-md sticky top-0 z-40 w-full">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -60,8 +72,20 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <a href="#features" className="text-muted hover:text-white transition-colors">Features</a>
-              <a href="#how-it-works" className="text-muted hover:text-white transition-colors">How It Works</a>
+              <a 
+                href="/#features" 
+                onClick={(e) => handleNavScroll(e, 'features')} 
+                className="text-muted hover:text-white transition-colors"
+              >
+                Features
+              </a>
+              <a 
+                href="/#how-it-works" 
+                onClick={(e) => handleNavScroll(e, 'how-it-works')} 
+                className="text-muted hover:text-white transition-colors"
+              >
+                How It Works
+              </a>
             </>
           )}
         </div>
