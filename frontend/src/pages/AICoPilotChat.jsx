@@ -379,7 +379,7 @@ function ImportProjectButton({ project, messageIndex }) {
         const createdProjectId = importRes.data.project._id;
         
         // 2. Auto-bookmark (save) the project for the user
-        await api.post('/api/saved-projects', { projectId: createdProjectId });
+        await api.post(`/api/saved-projects/${createdProjectId}`);
 
         setImported(true);
         localStorage.setItem(`imported_project_msg_${messageIndex}`, 'true');
