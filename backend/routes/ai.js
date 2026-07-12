@@ -32,17 +32,17 @@ router.post('/synopsis/:projectId', protect, async (req, res, next) => {
     // Call service to generate
     const data = await aiService.generateSynopsis(project);
 
-    // Save in DB
+    // Save in DB with robust sanitization fallbacks
     const synopsis = await Synopsis.create({
       user: req.user.id,
       project: projectId,
-      title: data.title,
-      abstract: data.abstract,
-      problemStatement: data.problemStatement,
-      objectives: data.objectives,
-      scope: data.scope,
-      techStack: data.techStack,
-      expectedOutcome: data.expectedOutcome
+      title: data.title || `${project.name} - Technical Proposal`,
+      abstract: data.abstract || project.description,
+      problemStatement: data.problemStatement || project.problemStatement,
+      objectives: data.objectives || project.objectives,
+      scope: data.scope || [],
+      techStack: data.techStack || project.techStack,
+      expectedOutcome: data.expectedOutcome || (Array.isArray(data.deliverables) ? data.deliverables.join(' ') : 'A fully functioning system deploy.')
     });
 
     res.status(201).json({

@@ -10,24 +10,20 @@ const getModel = () => {
 
 export const generateSynopsis = async (project) => {
   const model = getModel();
-  const prompt = `You are an expert full-stack developer and technical writer. 
-Generate a structured project synopsis for the following project:
+  const prompt = `You are a Senior Project Supervisor. Generate a structured technical project synopsis for:
 Name: ${project.name}
 Description: ${project.description}
-Domain: ${project.domain}
-Difficulty: ${project.difficulty}
 Tech Stack: ${project.techStack.join(', ')}
-Problem Statement: ${project.problemStatement}
 
-Return ONLY a valid JSON object matching this exact schema:
+Return a JSON object containing:
 {
-  "title": "String title",
-  "abstract": "String abstract (1 paragraph)",
-  "problemStatement": "String problem statement",
-  "objectives": ["String objective 1", "String objective 2"],
-  "scope": ["String scope 1", "String scope 2"],
-  "techStack": ["tech 1", "tech 2"],
-  "expectedOutcome": "String expected outcome"
+  "title": "A technical title for this proposal (e.g. 'Advanced Pygame-Based Space Invaders Clone')",
+  "abstract": "Comprehensive 3-4 sentence abstract of the project",
+  "problemStatement": "Detailed description of the problem solved",
+  "objectives": ["Objective 1", "Objective 2", "Objective 3"],
+  "scope": ["Scope item 1", "Scope item 2", "Scope item 3"],
+  "techStack": ["Stack Item 1", "Stack Item 2"],
+  "expectedOutcome": "Detailed description of the expected deliverables and outcomes of this project"
 }
 Ensure response is raw valid JSON without markdown wrapping (no \`\`\`json).`;
 

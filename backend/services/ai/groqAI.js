@@ -42,12 +42,13 @@ Tech Stack: ${project.techStack.join(', ')}
 
 Return a JSON object containing:
 {
-  "abstract": "Comprehensive 3-4 sentence abstract...",
-  "problemStatement": "Detailed description of the problem solved...",
+  "title": "A technical title for this proposal (e.g. 'Advanced Pygame-Based Space Invaders Clone')",
+  "abstract": "Comprehensive 3-4 sentence abstract of the project",
+  "problemStatement": "Detailed description of the problem solved",
   "objectives": ["Objective 1", "Objective 2", "Objective 3"],
   "scope": ["Scope item 1", "Scope item 2", "Scope item 3"],
-  "deliverables": ["Deliverable 1", "Deliverable 2"],
-  "limitations": ["Limitation 1", "Limitation 2"]
+  "techStack": ["Stack Item 1", "Stack Item 2"],
+  "expectedOutcome": "Detailed description of the expected deliverables and outcomes of this project"
 }`;
 
   const reply = await callGroq([
