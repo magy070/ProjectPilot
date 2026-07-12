@@ -80,44 +80,148 @@ export default function ProjectDetails() {
     );
   }
 
-  // Development Roadmap Data structure
-  const roadmapSteps = [
-    {
-      phase: "Requirement Analysis",
-      duration: "4 Days",
-      details: `Review the project problem statement: "${project.problemStatement}". Define structural inputs and document scopes.`
-    },
-    {
-      phase: "UI/UX Figma Mockups",
-      duration: "5 Days",
-      details: "Design a dark layout style sheet. Prototype components using low-opacity boundaries and custom glassmorphism borders."
-    },
-    {
-      phase: "Database Architecture",
-      duration: "4 Days",
-      details: `Define MongoDB schema structures for primary entities. Build models mapping these items: ${project.techStack.join(', ')}.`
-    },
-    {
-      phase: "Backend API Setup",
-      duration: "10 Days",
-      details: "Bootstrap an Express backend framework. Setup controllers for feature triggers, auth, and Zod security validation schema guards."
-    },
-    {
-      phase: "Frontend UI Buildout",
-      duration: "12 Days",
-      details: `Initialize Vite client, setup CSS configs, and mount dashboard components utilizing custom tags: ${project.requiredSkills.join(', ')}.`
-    },
-    {
-      phase: "Integrations & Testing",
-      duration: "7 Days",
-      details: "Connect Axios interceptors to JWT routes, bind React Query refetches, and write Vitest specs."
-    },
-    {
-      phase: "CI/CD Production Ship",
-      duration: "3 Days",
-      details: "Configure environment validation configurations on Render. Expose client variables, build static bundles, and launch live."
+  // Dynamic Timeline Roadmap Generator
+  const getDynamicRoadmap = () => {
+    let totalDays = 30; // default fallback
+    const timeStr = project.estimatedTime.toLowerCase().trim();
+    const matchNum = timeStr.match(/\d+/);
+    if (matchNum) {
+      const num = parseInt(matchNum[0]);
+      if (timeStr.includes('week')) {
+        totalDays = num * 7;
+      } else if (timeStr.includes('month')) {
+        totalDays = num * 30;
+      } else if (timeStr.includes('day')) {
+        totalDays = num;
+      }
     }
-  ];
+
+    const useHours = totalDays <= 3;
+    const totalUnits = useHours ? totalDays * 8 : totalDays;
+
+    const formatDuration = (units) => {
+      if (useHours) {
+        return `${units} ${units === 1 ? 'Hour' : 'Hours'}`;
+      }
+      if (units >= 7 && units % 7 === 0) {
+        const weeks = units / 7;
+        return `${weeks} ${weeks > 1 ? 'Weeks' : 'Week'}`;
+      }
+      return `${units} ${units === 1 ? 'Day' : 'Days'}`;
+    };
+
+    const isGame = project.domain.toLowerCase().includes('game') || 
+                   project.techStack.some(t => ['pygame', 'unity', 'phaser', 'canvas', 'game'].includes(t.toLowerCase()));
+    
+    const isScriptOrScraper = project.domain.toLowerCase().includes('scraper') || 
+                              project.name.toLowerCase().includes('scraper') ||
+                              project.techStack.some(t => ['beautifulsoup', 'selenium', 'pandas', 'scrapy', 'cheerio'].includes(t.toLowerCase()));
+
+    let phases = [];
+
+    if (isGame) {
+      phases = [
+        {
+          name: "Concept & Asset Design",
+          pct: 0.15,
+          details: "Define the game loop rules, control mechanics, and design/import static sprites, fonts, and sound files."
+        },
+        {
+          name: "Core Gameplay Mechanics",
+          pct: 0.35,
+          details: `Initialize the screen update canvas. Bind controller keyboard keys and implement basic player movements using ${project.techStack.join(', ')}.`
+        },
+        {
+          name: "Game State & Scoring System",
+          pct: 0.25,
+          details: "Build the start menu, game-over trigger overlays, and score calculations. Increase enemy velocity as the score escalates."
+        },
+        {
+          name: "SFX & Visual Adjustments",
+          pct: 0.15,
+          details: "Load audio effects for collisions, player shooting, and state changes. Align graphic layers and fix visual bugs."
+        },
+        {
+          name: "Playtesting & Packaging",
+          pct: 0.10,
+          details: "Run edge-to-edge hitbox testing. Resolve canvas boundary leaks and compile the final executable."
+        }
+      ];
+    } else if (isScriptOrScraper) {
+      phases = [
+        {
+          name: "Target HTML Inspection",
+          pct: 0.20,
+          details: `Analyze DOM attributes and selectors of the target web pages. Select tools matching: ${project.techStack.join(', ')}.`
+        },
+        {
+          name: "Parser Logic & Loop Core",
+          pct: 0.40,
+          details: "Setup target connection protocols. Retrieve document strings, implement extraction filters, and parse table rows."
+        },
+        {
+          name: "Data Cleansing & Exporting",
+          pct: 0.20,
+          details: "Clean raw text outputs, drop invalid fields, and export logs to structured JSON or CSV file formats."
+        },
+        {
+          name: "Rate Limiting & Exception Handling",
+          pct: 0.20,
+          details: "Configure sleep intervals between request batches to bypass anti-scraping firewalls. Wrap in try-catch guards."
+        }
+      ];
+    } else {
+      phases = [
+        {
+          name: "Requirements & Mockups",
+          pct: 0.15,
+          details: `Document layout scopes. Prototype mock views matching: ${project.name}.`
+        },
+        {
+          name: "API & Data Schema Design",
+          pct: 0.20,
+          details: `Configure databases models mapping keys for: ${project.techStack.slice(0, 3).join(', ')}.`
+        },
+        {
+          name: "Backend Core Build",
+          pct: 0.25,
+          details: "Bootstrap API controllers, add route routers, and set up Zod validator filters and JWT middleware shields."
+        },
+        {
+          name: "Frontend UI Integration",
+          pct: 0.25,
+          details: "Develop user interface components, hook up API response handlers, and setup state manager caching."
+        },
+        {
+          name: "Testing & Cloud Release",
+          pct: 0.15,
+          details: "Write test suites, compile production bundles, customize environment values, and deploy."
+        }
+      ];
+    }
+
+    let allocatedUnits = 0;
+    const roadmap = phases.map((phase, idx) => {
+      let durationUnits = Math.round(totalUnits * phase.pct);
+      if (durationUnits < 1) durationUnits = 1;
+      
+      if (idx === phases.length - 1 && totalUnits > phases.length) {
+        durationUnits = Math.max(1, totalUnits - allocatedUnits);
+      } else {
+        allocatedUnits += durationUnits;
+      }
+
+      return {
+        phase: phase.name,
+        duration: formatDuration(durationUnits),
+        details: phase.details
+      };
+    });
+
+    return roadmap;
+  };
+
+  const roadmapSteps = getDynamicRoadmap();
 
   return (
     <div className="bg-background min-h-screen text-text py-12 relative overflow-hidden font-sans">
