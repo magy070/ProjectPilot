@@ -118,36 +118,95 @@ export default function LandingPage() {
 
         {/* Static dashboard preview mockup */}
         <div className="mt-20 w-full max-w-5xl rounded-2xl border border-white/10 bg-white/2 p-2 relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none"></div>
-          <div className="rounded-xl overflow-hidden border border-white/5 bg-black/60 relative">
-            <div className="h-8 border-b border-white/5 bg-white/5 flex items-center px-4 gap-2">
+          <div className="rounded-xl overflow-hidden border border-white/5 bg-[#08080c] relative">
+            {/* Window Header */}
+            <div className="h-10 border-b border-white/5 bg-white/5 flex items-center px-4 gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-rose-500/60"></span>
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60"></span>
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/60"></span>
-              <span className="text-[10px] text-muted ml-4 font-mono">projectpilot.app/dashboard</span>
+              <span className="text-[10px] text-muted ml-4 font-mono select-none">projectpilot.app/dashboard</span>
             </div>
             
-            {/* Mock layout structure */}
-            <div className="p-8 text-left grid grid-cols-3 gap-6 opacity-80 min-h-[300px]">
-              <div className="col-span-2 space-y-4">
-                <div className="h-6 w-48 bg-white/10 rounded"></div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="h-32 bg-white/5 rounded-xl border border-white/5 p-4 flex flex-col justify-between">
-                    <div className="h-4 w-12 bg-primary/20 rounded"></div>
-                    <div className="h-8 w-24 bg-white/20 rounded"></div>
+            {/* Mock Dashboard Body */}
+            <div className="p-6 md:p-8 text-left grid grid-cols-1 md:grid-cols-4 gap-6 min-h-[350px]">
+              
+              {/* Mock Sidebar */}
+              <div className="col-span-1 border-r border-white/5 pr-4 space-y-4 hidden md:block text-xs text-muted font-medium">
+                <div className="h-6 w-20 bg-white/10 rounded mb-4"></div>
+                <div className="flex items-center gap-2 text-white bg-primary/10 border border-primary/20 px-3 py-2 rounded-xl">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                  Discover Feed
+                </div>
+                <div className="px-3 py-2 hover:text-white transition cursor-pointer">Saved Projects</div>
+                <div className="px-3 py-2 hover:text-white transition cursor-pointer">AI Synopses</div>
+                <div className="px-3 py-2 hover:text-white transition cursor-pointer">Compare Matrix</div>
+                <div className="px-3 py-2 hover:text-white transition cursor-pointer">Developer Settings</div>
+              </div>
+
+              {/* Mock Main panel */}
+              <div className="md:col-span-3 space-y-6">
+                
+                {/* Banner Header */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div className="space-y-1">
+                    <div className="h-5 w-40 bg-white/20 rounded"></div>
+                    <div className="h-3 w-64 bg-white/5 rounded"></div>
                   </div>
-                  <div className="h-32 bg-white/5 rounded-xl border border-white/5 p-4 flex flex-col justify-between">
-                    <div className="h-4 w-12 bg-secondary/20 rounded"></div>
-                    <div className="h-8 w-24 bg-white/20 rounded"></div>
+                  <div className="flex gap-2">
+                    <div className="h-7 w-20 bg-white/10 rounded-lg"></div>
+                    <div className="h-7 w-24 bg-primary/20 rounded-lg border border-primary/20"></div>
                   </div>
                 </div>
+
+                {/* Simulated Stats Panels */}
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-white/2 border border-white/5 p-4 rounded-xl">
+                    <span className="text-[10px] text-muted block uppercase font-mono">Saved Projects</span>
+                    <span className="text-xl font-extrabold text-white">03</span>
+                  </div>
+                  <div className="bg-white/2 border border-white/5 p-4 rounded-xl">
+                    <span className="text-[10px] text-muted block uppercase font-mono">AI Synopses</span>
+                    <span className="text-xl font-extrabold text-secondary">12</span>
+                  </div>
+                  <div className="bg-white/2 border border-white/5 p-4 rounded-xl">
+                    <span className="text-[10px] text-muted block uppercase font-mono">Avg Feasibility</span>
+                    <span className="text-xl font-extrabold text-emerald-400">92%</span>
+                  </div>
+                </div>
+
+                {/* Simulated Recommended Project Cards */}
+                <div className="space-y-3">
+                  <div className="bg-white/2 border border-white/5 p-4 rounded-xl flex items-center justify-between gap-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-white">AI-Powered Health Companion</span>
+                        <span className="text-[9px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-1.5 py-0.5 rounded font-mono">ADVANCED</span>
+                      </div>
+                      <div className="h-2.5 w-64 bg-white/5 rounded"></div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[9px] text-muted block font-mono">FEASIBILITY</span>
+                      <span className="text-sm font-extrabold text-emerald-400">95%</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/2 border border-white/5 p-4 rounded-xl flex items-center justify-between gap-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-white">Smart IoT Home Dashboard</span>
+                        <span className="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-mono">INTERMEDIATE</span>
+                      </div>
+                      <div className="h-2.5 w-56 bg-white/5 rounded"></div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[9px] text-muted block font-mono">FEASIBILITY</span>
+                      <span className="text-sm font-extrabold text-amber-400">90%</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              <div className="bg-white/5 rounded-xl border border-white/5 p-4 space-y-3">
-                <div className="h-4 w-24 bg-white/15 rounded"></div>
-                <div className="h-2 w-full bg-white/5 rounded"></div>
-                <div className="h-2 w-full bg-white/5 rounded"></div>
-                <div className="h-2 w-3/4 bg-white/5 rounded"></div>
-              </div>
+
             </div>
           </div>
         </div>
