@@ -88,7 +88,7 @@ Do not wrap response in markdown code blocks (no \`\`\`json), return raw JSON.`;
   return parsed.projects || parsed;
 };
 
-export const chatWithCoach = async (message, history, parameters) => {
+export const chatWithCoach = async (message, history) => {
   const model = getModel();
   
   // Format history for Gemini chat structure
@@ -100,29 +100,25 @@ export const chatWithCoach = async (message, history, parameters) => {
   const chat = model.startChat({
     history: formattedHistory,
     systemInstruction: `You are "ProjectPilot Co-Pilot", a helpful and experienced software project coach.
-Your job is to help the user design a project using their parameters:
-- Domain: ${parameters.domain || 'Any'}
-- Difficulty: ${parameters.difficulty || 'Any'}
-- Timeframe: ${parameters.estimatedTime || 'Any'}
-- Team Size: ${parameters.teamSize || 'Any'}
-- Skills: ${parameters.skills?.join(', ') || 'Any'}
+Your job is to help the user brainstorm, design, and structure a custom software project.
+Converse with the user to understand their constraints (like timeframe, team members, and target skills) directly from their messages rather than forcing them to fill out forms.
 
-Guide the user conversationally. Suggest architectures and stacks.
+Guide the user conversationally, suggesting architectural design choices and tech stacks.
 If you propose a specific software project idea, you must format that project as a JSON block wrapped in [PROJECT_JSON] and [/PROJECT_JSON] tag blocks at the very end of your response so the system can display a button to import it directly to their dashboard.
 
 Example format:
 [PROJECT_JSON]
 {
   "name": "Project Name",
-  "description": "Short description",
-  "problemStatement": "Problem details",
-  "objectives": ["Objective 1"],
-  "features": ["Feature 1"],
-  "techStack": ["React"],
+  "description": "Short description of what the project does",
+  "problemStatement": "Detailed problem this project solves",
+  "objectives": ["Objective 1", "Objective 2"],
+  "features": ["Feature 1", "Feature 2"],
+  "techStack": ["React", "Express"],
   "requiredSkills": ["React"],
   "difficulty": "Intermediate",
   "estimatedTime": "1 Month",
-  "resumeValue": "Resume value text",
+  "resumeValue": "Resume value text description",
   "teamSize": 2,
   "domain": "Web Dev"
 }

@@ -97,17 +97,17 @@ router.post('/prompt/:projectId', protect, async (req, res, next) => {
   }
 });
 
-// @desc    Chat with AI advisor/coach using specifications
+// @desc    Chat with AI advisor/coach
 // @route   POST /api/ai/chat
 // @access  Private
 router.post('/chat', protect, async (req, res, next) => {
   try {
-    const { message, history, parameters } = req.body;
+    const { message, history } = req.body;
     if (!message) {
       return res.status(400).json({ success: false, message: 'Message is required' });
     }
 
-    const responseText = await aiService.chatWithCoach(message, history, parameters || {});
+    const responseText = await aiService.chatWithCoach(message, history);
     res.status(200).json({
       success: true,
       reply: responseText

@@ -93,13 +93,13 @@ export const generateProjectIdeas = async (domain, difficulty, skills, interests
   return await templateAI.generateProjectIdeas(domain, difficulty, skills, interests);
 };
 
-export const chatWithCoach = async (message, history, parameters) => {
+export const chatWithCoach = async (message, history) => {
   const provider = getPreferredProvider();
 
   if (provider === 'groq') {
     try {
       console.log('[AI Service] Routing to Groq API (Chat Coach)...');
-      return await groqAI.chatWithCoach(message, history, parameters);
+      return await groqAI.chatWithCoach(message, history);
     } catch (error) {
       console.warn('[AI Service] Groq Chat failed, falling back:', error.message);
     }
@@ -108,12 +108,12 @@ export const chatWithCoach = async (message, history, parameters) => {
   if (provider === 'gemini' || (provider === 'groq' && !!process.env.GEMINI_API_KEY)) {
     try {
       console.log('[AI Service] Routing to Gemini API (Chat Coach)...');
-      return await geminiAI.chatWithCoach(message, history, parameters);
+      return await geminiAI.chatWithCoach(message, history);
     } catch (error) {
       console.warn('[AI Service] Gemini Chat failed, falling back:', error.message);
     }
   }
 
   console.log('[AI Service] Using local template engine for Chat Coach.');
-  return await templateAI.chatWithCoach(message, history, parameters);
+  return await templateAI.chatWithCoach(message, history);
 };
