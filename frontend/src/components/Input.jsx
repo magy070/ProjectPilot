@@ -25,7 +25,7 @@ export default function Input({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className={`w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-muted focus:border-primary/50 focus:bg-white/10 outline-none transition duration-200 ${className}`}
+        className={`w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-muted focus:border-primary/50 focus:bg-white/10 focus:ring-2 focus:ring-primary/20 outline-none transition duration-200 ${className}`}
         {...props}
       />
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Sparkles, Terminal, CheckCircle2, Lock, Mail, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Card from '../components/Card.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
@@ -92,10 +93,15 @@ export default function AuthPages() {
   return (
     <div className="bg-background min-h-screen text-text flex items-center justify-center p-6 relative overflow-hidden font-sans">
       {/* Decorative Blur Background Blobs */}
-      <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-primary/5 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-[10%] right-[-15%] w-[450px] h-[450px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-primary/5 blur-[120px] pointer-events-none animate-float"></div>
+      <div className="absolute bottom-[10%] right-[-15%] w-[450px] h-[450px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none animate-float [animation-delay:2s]"></div>
 
-      <div className="w-full max-w-xl z-10 py-12">
+      <motion.div 
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="w-full max-w-xl z-10 py-12"
+      >
         <div className="text-center mb-8">
           <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary items-center justify-center shadow-lg shadow-primary/20 mb-4">
             <span className="font-extrabold text-white text-xl">P</span>
@@ -131,12 +137,20 @@ export default function AuthPages() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {errorMsg && (
-              <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl flex items-start gap-2.5">
-                <Terminal size={14} className="shrink-0 mt-0.5" />
-                <span>{errorMsg}</span>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {errorMsg && (
+                <motion.div 
+                  key="error"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl flex items-start gap-2.5 animate-shake"
+                >
+                  <Terminal size={14} className="shrink-0 mt-0.5" />
+                  <span>{errorMsg}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {activeTab === 'register' && (
               <Input
@@ -248,9 +262,22 @@ export default function AuthPages() {
               </div>
             )}
 
-            <Button type="submit" variant="glow" className="w-full py-3 mt-4" disabled={loading}>
-              {loading ? 'Authenticating...' : activeTab === 'login' ? 'Sign In' : 'Register Account'}
-            </Button>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Button type="submit" variant="glow" className="w-full py-3 mt-4 flex items-center justify-center gap-2" disabled={loading}>
+                {loading ? (
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+                    className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full"
+                  />
+                ) : (
+                  activeTab === 'login' ? 'Sign In' : 'Register Account'
+                )}
+              </Button>
+            </motion.div>
           </form>
 
           {/* Switch Footer text */}
@@ -272,7 +299,7 @@ export default function AuthPages() {
             )}
           </p>
         </Card>
-      </div>
+      </motion.div>
     </div>
   );
 }

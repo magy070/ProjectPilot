@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, CheckCircle, Database, GitBranch, RefreshCw, BarChart2, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Button from '../components/Button.jsx';
 import Card from '../components/Card.jsx';
 import Badge from '../components/Badge.jsx';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -69,26 +80,31 @@ export default function LandingPage() {
   return (
     <div className="bg-background min-h-screen text-text relative overflow-hidden font-sans">
       {/* Background blobs */}
-      <div className="absolute top-[10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px] pointer-events-none"></div>
-      <div className="absolute top-[40%] right-[-10%] w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[150px] pointer-events-none"></div>
+      <div className="absolute top-[10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px] pointer-events-none animate-float"></div>
+      <div className="absolute top-[40%] right-[-10%] w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[150px] pointer-events-none animate-float [animation-delay:2s]"></div>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 pt-24 pb-16 flex flex-col items-center text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-xs font-semibold text-primary mb-6 animate-pulse">
+      <motion.section 
+        initial="hidden"
+        animate="visible"
+        variants={stagger}
+        className="max-w-7xl mx-auto px-6 pt-24 pb-16 flex flex-col items-center text-center relative z-10"
+      >
+        <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-xs font-semibold text-primary mb-6 animate-pulse">
           <Sparkles size={12} /> Next-Gen AI Project Architect
-        </div>
+        </motion.div>
         
-        <h1 className="text-hero md:text-6xl font-extrabold tracking-tight max-w-4xl bg-gradient-to-b from-white to-muted bg-clip-text text-transparent leading-tight">
+        <motion.h1 variants={fadeUp} className="text-hero md:text-6xl font-extrabold tracking-tight max-w-4xl bg-gradient-to-b from-white to-muted bg-clip-text text-transparent leading-tight">
           Build Better Projects <br className="hidden sm:inline" />
           with <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent glow-text-primary">AI Guidance</span>
-        </h1>
+        </motion.h1>
         
-        <p className="mt-6 text-lg md:text-xl text-muted max-w-2xl">
+        <motion.p variants={fadeUp} className="mt-6 text-lg md:text-xl text-muted max-w-2xl">
           ProjectPilot helps students and developers discover project ideas, generate comprehensive synopses, extract developer prompts, and map execution timelines.
-        </p>
+        </motion.p>
 
         {/* Premium prompt input */}
-        <form onSubmit={handleGenerate} className="mt-12 w-full max-w-2xl relative">
+        <motion.form variants={fadeUp} onSubmit={handleGenerate} className="mt-12 w-full max-w-2xl relative">
           <div className="glass-card p-2 rounded-2xl border border-white/10 flex items-center shadow-2xl">
             <input
               type="text"
@@ -101,10 +117,10 @@ export default function LandingPage() {
               Generate Ideas <ArrowRight size={16} />
             </Button>
           </div>
-        </form>
+        </motion.form>
 
         {/* Chips */}
-        <div className="mt-6 flex flex-wrap justify-center gap-2.5 max-w-2xl">
+        <motion.div variants={fadeUp} className="mt-6 flex flex-wrap justify-center gap-2.5 max-w-2xl">
           {chips.map((chip, idx) => (
             <button
               key={idx}
@@ -114,10 +130,10 @@ export default function LandingPage() {
               {chip}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Static dashboard preview mockup */}
-        <div className="mt-20 w-full max-w-5xl rounded-2xl border border-white/10 bg-white/2 p-2 relative overflow-hidden shadow-2xl">
+        <motion.div variants={fadeUp} className="mt-20 w-full max-w-5xl rounded-2xl border border-white/10 bg-white/2 p-2 relative overflow-hidden shadow-2xl">
           <div className="rounded-xl overflow-hidden border border-white/5 bg-[#08080c] relative">
             {/* Window Header */}
             <div className="h-10 border-b border-white/5 bg-white/5 flex items-center px-4 gap-2">
@@ -131,7 +147,7 @@ export default function LandingPage() {
             <div className="p-6 md:p-8 text-left grid grid-cols-1 md:grid-cols-4 gap-6 min-h-[350px]">
               
               {/* Mock Sidebar */}
-              <div className="col-span-1 border-r border-white/5 pr-4 space-y-4 hidden md:block text-xs text-muted font-medium">
+              <div className="col-span-1 border-r border-white/5 pr-4 space-y-4 hidden md:block text-xs text-muted font-medium font-sans">
                 <div className="h-6 w-20 bg-white/10 rounded mb-4"></div>
                 <div className="flex items-center gap-2 text-white bg-primary/10 border border-primary/20 px-3 py-2 rounded-xl">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
@@ -200,7 +216,7 @@ export default function LandingPage() {
                     </div>
                     <div className="text-right">
                       <span className="text-[9px] text-muted block font-mono">FEASIBILITY</span>
-                      <span className="text-sm font-extrabold text-amber-400">90%</span>
+                      <span className="text-sm font-extrabold text-emerald-400">90%</span>
                     </div>
                   </div>
                 </div>
@@ -209,8 +225,8 @@ export default function LandingPage() {
 
             </div>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Features Section */}
       <section id="features" className="max-w-7xl mx-auto px-6 py-20 relative z-10">
@@ -223,19 +239,32 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={stagger}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {features.map((feat, index) => (
-            <Card key={index} hoverGlow className="flex flex-col gap-4">
-              <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
-                {feat.icon}
-              </div>
-              <div>
-                <h3 className="font-bold text-lg text-white mb-2">{feat.title}</h3>
-                <p className="text-sm text-muted leading-relaxed">{feat.description}</p>
-              </div>
-            </Card>
+            <motion.div 
+              key={index}
+              variants={fadeUp}
+              whileHover={{ y: -6, boxShadow: '0 0 30px rgba(99,102,241,0.25)' }}
+              className="transition-all duration-300 rounded-2xl"
+            >
+              <Card className="flex flex-col gap-4 h-full">
+                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
+                  {feat.icon}
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-white mb-2">{feat.title}</h3>
+                  <p className="text-sm text-muted leading-relaxed">{feat.description}</p>
+                </div>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* How It Works Section */}
@@ -250,9 +279,15 @@ export default function LandingPage() {
         </div>
 
         {/* Timeline block */}
-        <div className="relative border-l border-white/5 ml-4 md:ml-32 pl-8 space-y-12">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={stagger}
+          className="relative border-l border-white/5 ml-4 md:ml-32 pl-8 space-y-12"
+        >
           {steps.map((step, idx) => (
-            <div key={idx} className="relative group">
+            <motion.div key={idx} variants={fadeUp} className="relative group">
               {/* Point Node */}
               <div className="absolute left-[-42px] top-1 w-6 h-6 rounded-full bg-background border-2 border-primary/40 flex items-center justify-center group-hover:border-primary transition duration-300">
                 <span className="w-2.5 h-2.5 rounded-full bg-primary/60 group-hover:bg-primary transition"></span>
@@ -271,9 +306,9 @@ export default function LandingPage() {
                   Automatically mapped and stored inside your cloud sync history vault.
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Call to Action */}
