@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../context/AuthContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Sparkles, Bookmark, ArrowRight, BarChart2, Plus, Check, Settings, Code, FileText, Zap } from 'lucide-react';
+import { Sparkles, Bookmark, ArrowRight, BarChart2, Plus, Check, Settings, Code, FileText, Zap, Search } from 'lucide-react';
 import Card from '../components/Card.jsx';
 import Button from '../components/Button.jsx';
 import Badge from '../components/Badge.jsx';
@@ -16,6 +16,7 @@ export default function Dashboard() {
   // Project filtering local state
   const [selectedDomain, setSelectedDomain] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [compareList, setCompareList] = useState([]); // selected project objects
 
   // 1. Fetch Stats
@@ -91,7 +92,16 @@ export default function Dashboard() {
   const filteredProjects = recommendationsData?.filter(proj => {
     const domainMatch = selectedDomain ? proj.domain === selectedDomain : true;
     const diffMatch = selectedDifficulty ? proj.difficulty === selectedDifficulty : true;
-    return domainMatch && diffMatch;
+    
+    const query = searchQuery.toLowerCase().trim();
+    const textMatch = query
+      ? proj.name.toLowerCase().includes(query) ||
+        proj.description.toLowerCase().includes(query) ||
+        proj.techStack.some(tech => tech.toLowerCase().includes(query)) ||
+        proj.requiredSkills.some(skill => skill.toLowerCase().includes(query))
+      : true;
+
+    return domainMatch && diffMatch && textMatch;
   });
 
   const domains = ['Web Dev', 'AI/ML', 'Cybersecurity', 'Blockchain', 'IoT', 'Cloud'];
@@ -249,6 +259,18 @@ export default function Dashboard() {
               <span className="text-xs text-muted">
                 Showing {filteredProjects?.length || 0} projects
               </span>
+            </div>
+
+            {/* Search Input Bar */}
+            <div className="relative">
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search projects by name, description, or stack..."
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-muted focus:bg-white/10 focus:border-primary/50 outline-none transition duration-200"
+              />
             </div>
 
             {recsLoading ? (
