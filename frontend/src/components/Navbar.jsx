@@ -40,6 +40,12 @@ export default function Navbar() {
                 Dashboard
               </Link>
               <Link 
+                to="/chat" 
+                className={`${isActive('/chat') ? 'text-primary' : 'text-muted hover:text-white'} transition-colors`}
+              >
+                AI Co-Pilot
+              </Link>
+              <Link 
                 to="/saved" 
                 className={`${isActive('/saved') ? 'text-primary' : 'text-muted hover:text-white'} transition-colors`}
               >

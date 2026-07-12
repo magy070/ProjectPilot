@@ -88,3 +88,48 @@ Do not wrap response in markdown code blocks (no \`\`\`json), return raw JSON.`;
   const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
   return JSON.parse(cleaned);
 };
+
+export const chatWithCoach = async (message, history, parameters) => {
+  const model = getModel();
+  
+  // Format history for Gemini chat structure
+  const formattedHistory = (history || []).map(msg => ({
+    role: msg.role === 'user' ? 'user' : 'model',
+    parts: [{ text: msg.text }]
+  }));
+
+  const chat = model.startChat({
+    history: formattedHistory,
+    systemInstruction: `You are "ProjectPilot Co-Pilot", a helpful and experienced software project coach.
+Your job is to help the user design a project using their parameters:
+- Domain: ${parameters.domain || 'Any'}
+- Difficulty: ${parameters.difficulty || 'Any'}
+- Timeframe: ${parameters.estimatedTime || 'Any'}
+- Team Size: ${parameters.teamSize || 'Any'}
+- Skills: ${parameters.skills?.join(', ') || 'Any'}
+
+Guide the user conversationally. Suggest architectures and stacks.
+If you propose a specific software project idea, you must format that project as a JSON block wrapped in [PROJECT_JSON] and [/PROJECT_JSON] tag blocks at the very end of your response so the system can display a button to import it directly to their dashboard.
+
+Example format:
+[PROJECT_JSON]
+{
+  "name": "Project Name",
+  "description": "Short description",
+  "problemStatement": "Problem details",
+  "objectives": ["Objective 1"],
+  "features": ["Feature 1"],
+  "techStack": ["React"],
+  "requiredSkills": ["React"],
+  "difficulty": "Intermediate",
+  "estimatedTime": "1 Month",
+  "resumeValue": "Resume value text",
+  "teamSize": 2,
+  "domain": "Web Dev"
+}
+[/PROJECT_JSON]`
+  });
+
+  const result = await chat.sendMessage(message);
+  return result.response.text();
+};

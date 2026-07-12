@@ -148,4 +148,36 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+// @desc    Import a custom generated project into the database
+// @route   POST /api/projects/import
+// @access  Private
+router.post('/import', protect, async (req, res, next) => {
+  try {
+    const projectData = req.body;
+    
+    // Create new project entry in the DB
+    const newProject = await Project.create({
+      name: projectData.name,
+      description: projectData.description,
+      problemStatement: projectData.problemStatement || '',
+      objectives: projectData.objectives || [],
+      features: projectData.features || [],
+      techStack: projectData.techStack || [],
+      requiredSkills: projectData.requiredSkills || [],
+      difficulty: projectData.difficulty || 'Intermediate',
+      estimatedTime: projectData.estimatedTime || '1 Month',
+      resumeValue: projectData.resumeValue || '',
+      teamSize: projectData.teamSize || 2,
+      domain: projectData.domain || 'Web Dev'
+    });
+
+    res.status(201).json({
+      success: true,
+      project: newProject
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

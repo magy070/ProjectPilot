@@ -94,3 +94,35 @@ export const generateProjectIdeas = async (domain, difficulty, skills, interests
     }
   ];
 };
+
+export const chatWithCoach = async (message, history, parameters) => {
+  return `Hi! I am ProjectPilot Co-Pilot (running in offline template mode).
+You asked: "${message}"
+
+Based on your active parameters:
+- Domain: ${parameters.domain || 'Web Dev'}
+- Difficulty: ${parameters.difficulty || 'Intermediate'}
+- Timeframe: ${parameters.estimatedTime || '1 Month'}
+- Team Size: ${parameters.teamSize || 2}
+- Skills: ${parameters.skills?.join(', ') || 'React, Node.js'}
+
+Here is a recommended project I tailored for you. You can review the specs below and import it immediately into your active discoveries workspace:
+
+[PROJECT_JSON]
+{
+  "name": "Conversational ${parameters.domain || 'Web'} Project",
+  "description": "An interactive project customized dynamically inside the AI coach chat session.",
+  "problemStatement": "Developers need custom mock workspaces tailored directly from chat prompts.",
+  "objectives": ["Connect web socket events", "Establish JWT tokens schemas", "Design dark UI parameters"],
+  "features": ["Real-time message boards", "Active parameters sidebars", "One-click DB importers"],
+  "techStack": ["React", "Express", "Mongoose", "Tailwind CSS"],
+  "requiredSkills": ${JSON.stringify(parameters.skills || ['React', 'Node.js'])},
+  "difficulty": "${parameters.difficulty || 'Intermediate'}",
+  "estimatedTime": "${parameters.estimatedTime || '1 Month'}",
+  "resumeValue": "High: Focuses on custom conversational flows and dashboard schema hooks.",
+  "feasibilityScore": 95,
+  "teamSize": ${parameters.teamSize || 2},
+  "domain": "${parameters.domain || 'Web Dev'}"
+}
+[/PROJECT_JSON]`;
+};

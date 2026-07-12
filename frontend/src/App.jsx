@@ -9,6 +9,7 @@ import ProjectDetails from './pages/ProjectDetails.jsx';
 import ProjectComparison from './pages/ProjectComparison.jsx';
 import SavedProjectsPage from './pages/SavedProjectsPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import AICoPilotChat from './pages/AICoPilotChat.jsx';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -62,6 +63,11 @@ export default function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/chat" element={
+              <ProtectedRoute>
+                <AICoPilotChat />
               </ProtectedRoute>
             } />
             

@@ -97,4 +97,24 @@ router.post('/prompt/:projectId', protect, async (req, res, next) => {
   }
 });
 
+// @desc    Chat with AI advisor/coach using specifications
+// @route   POST /api/ai/chat
+// @access  Private
+router.post('/chat', protect, async (req, res, next) => {
+  try {
+    const { message, history, parameters } = req.body;
+    if (!message) {
+      return res.status(400).json({ success: false, message: 'Message is required' });
+    }
+
+    const responseText = await aiService.chatWithCoach(message, history, parameters || {});
+    res.status(200).json({
+      success: true,
+      reply: responseText
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

@@ -49,3 +49,18 @@ export const generateProjectIdeas = async (domain, difficulty, skills, interests
     return await templateAI.generateProjectIdeas(domain, difficulty, skills, interests);
   }
 };
+
+export const chatWithCoach = async (message, history, parameters) => {
+  if (isGeminiAvailable()) {
+    try {
+      console.log('[AI Service] Routing to Gemini API (Chat Coach)...');
+      return await geminiAI.chatWithCoach(message, history, parameters);
+    } catch (error) {
+      console.warn('[AI Service] Gemini chat failed, falling back to templates:', error.message);
+      return await templateAI.chatWithCoach(message, history, parameters);
+    }
+  } else {
+    console.log('[AI Service] GEMINI_API_KEY missing, using local template chat advisor.');
+    return await templateAI.chatWithCoach(message, history, parameters);
+  }
+};
