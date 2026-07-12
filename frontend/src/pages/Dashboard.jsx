@@ -186,8 +186,12 @@ export default function Dashboard() {
                   onChange={(e) => setSelectedDomain(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50"
                 >
-                  <option value="">All Domains</option>
-                  {domains.map((d, i) => <option key={i} value={d}>{d}</option>)}
+                  <option value="" className="bg-[#0e0e11] text-white">All Domains</option>
+                  {domains.map((d, i) => (
+                    <option key={i} value={d} className="bg-[#0e0e11] text-white">
+                      {d}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -199,10 +203,10 @@ export default function Dashboard() {
                   onChange={(e) => setSelectedDifficulty(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50"
                 >
-                  <option value="">All Difficulties</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
+                  <option value="" className="bg-[#0e0e11] text-white">All Difficulties</option>
+                  <option value="Beginner" className="bg-[#0e0e11] text-white">Beginner</option>
+                  <option value="Intermediate" className="bg-[#0e0e11] text-white">Intermediate</option>
+                  <option value="Advanced" className="bg-[#0e0e11] text-white">Advanced</option>
                 </select>
               </div>
 
