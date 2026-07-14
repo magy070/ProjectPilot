@@ -275,10 +275,6 @@ export default function LandingPage() {
             transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
             className="flex flex-col items-center gap-1"
           >
-            {/* Mouse outline */}
-            <div className="w-5 h-8 border-2 border-muted/80 rounded-full flex justify-center p-1 relative">
-              <span className="w-1 h-2 bg-secondary rounded-full animate-bounce absolute top-1.5"></span>
-            </div>
             {/* Down Chevron */}
             <svg className="w-3.5 h-3.5 text-muted/80 mt-1 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
