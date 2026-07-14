@@ -2,52 +2,182 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Los Santos Sunset Light Theme */
+  --color-background: #F5E8D0;     /* warm sand beige */
+  --color-card: #FFF8EE;           /* light warm cream card */
+  --color-primary: #3A5F0B;        /* dark olive green */
+  --color-secondary: #C49A4A;      /* sunset gold */
+  --color-text: #232323;           /* dark charcoal text */
+  --color-muted: #6B6560;          /* muted bronze-gray */
+  --color-border: #E5D6BD;         /* soft tan border */
+  --color-accent-orange: #E47A2E;  /* sun orange */
+  --color-accent-green: #6D9D3C;   /* weed green accent */
+  --color-success: #5FBF50;        /* hood green */
+  --color-danger: #D64545;         /* lowrider red */
+  
+  --shadow-warm: 0 4px 20px rgba(58, 95, 11, 0.08), 0 2px 8px rgba(196, 154, 74, 0.05);
+}
+
+.dark {
+  /* Los Santos Night Dark Theme */
+  --color-background: #121212;     /* deep asphalt black */
+  --color-card: #1B1B1B;           /* charcoal leather card */
+  --color-primary: #3A5F0B;        /* dark olive green */
+  --color-secondary: #C49A4A;      /* neon gold accents */
+  --color-text: #F5F5F5;           /* off-white text */
+  --color-muted: #A1A1AA;          /* iron gray muted */
+  --color-border: #2D2D2D;         /* dark metallic border */
+  --color-accent-orange: #E47A2E;  /* street orange glow */
+  --color-accent-green: #6D9D3C;   /* toxic neon green */
+  --color-success: #5FBF50;        /* classic green indicator */
+  --color-danger: #D64545;         /* siren red indicator */
+  
+  --shadow-warm: 0 4px 25px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(196, 154, 74, 0.04);
+}
+
 @layer utilities {
   .glass-card {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    box-shadow: var(--shadow-warm);
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
 
   .glass-card-hover {
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .glass-card-hover:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(99, 102, 241, 0.25); /* Subtle primary tint */
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1), 0 0 20px rgba(99, 102, 241, 0.05);
+    transform: translateY(-5px) scale(1.01) rotate(0.5deg);
+    border-color: var(--color-secondary);
+    box-shadow: 0 12px 30px rgba(196, 154, 74, 0.12), 0 4px 10px rgba(58, 95, 11, 0.08);
   }
 
-  .glow-text-primary {
-    text-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
-  }
-
-  .glow-text-secondary {
-    text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+  /* Neon flicker effects */
+  .neon-flicker {
+    animation: neonFlicker 2.5s infinite alternate;
   }
 }
 
-/* Custom Scrollbar for premium dark theme */
+/* Custom Scrollbar styled for GTA Los Santos style */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: var(--color-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  background: var(--color-border);
+  border-radius: 9999px;
+  border: 2px solid var(--color-background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.5);
+  background: var(--color-secondary);
+}
+
+/* Keyframes for GTA Atmosphere & Cinematics */
+@keyframes neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 0.99;
+    filter: drop-shadow(0 0 4px var(--color-secondary));
+  }
+  20%, 24%, 55% {
+    opacity: 0.4;
+    filter: none;
+  }
+}
+
+/* Cloud translation */
+@keyframes cloudMove {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+
+.animate-cloud-slow {
+  animation: cloudMove 45s linear infinite;
+}
+
+.animate-cloud-fast {
+  animation: cloudMove 25s linear infinite;
+}
+
+/* Flying Birds keyframes */
+@keyframes birdFlight {
+  0% {
+    transform: translate(-10%, 120%) scale(0.6);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(110%, -20%) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-bird-flight {
+  animation: birdFlight 20s linear infinite;
+}
+
+/* Streetlights pulse */
+@keyframes lightPulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.65; }
+}
+
+.animate-light-pulse {
+  animation: lightPulse 4s ease-in-out infinite;
+}
+
+/* Ken Burns background zoom & pan */
+@keyframes cinematicZoom {
+  0% { transform: scale(1.05) translate(0, 0); }
+  25% { transform: scale(1.1) translate(10px, -5px); }
+  50% { transform: scale(1.05) translate(-5px, 5px); }
+  75% { transform: scale(1.1) translate(-10px, -5px); }
+  100% { transform: scale(1.05) translate(0, 0); }
+}
+
+.animate-cinematic {
+  animation: cinematicZoom 28s ease-in-out infinite;
+}
+
+/* Cinematic downtown zoom */
+@keyframes cinematicZoomDowntown {
+  0%, 100% { transform: scale(1.02) translate(0px, 0px); }
+  50% { transform: scale(1.08) translate(-6px, 3px); }
+}
+
+.animate-cinematic-downtown {
+  animation: cinematicZoomDowntown 20s ease-in-out infinite;
+}
+
+/* Cinematic Vinewood zoom */
+@keyframes cinematicZoomVinewood {
+  0%, 100% { transform: scale(1.02) translate(0px, 0px); }
+  50% { transform: scale(1.09) translate(6px, -4px); }
+}
+
+.animate-cinematic-vinewood {
+  animation: cinematicZoomVinewood 25s ease-in-out infinite;
+}
+
+/* Spraypaint text gradient clip setup */
+.spray-text {
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Smooth motion rules */

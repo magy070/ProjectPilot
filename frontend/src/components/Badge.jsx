@@ -1,16 +1,16 @@
 import React from 'react';
 
 export default function Badge({ children, type = 'tech', className = '' }) {
-  const baseStyle = "px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wider select-none";
+  const baseStyle = "px-3 py-1 rounded-xl text-xs font-heading font-black tracking-wider uppercase select-none border";
   
   const types = {
-    tech: "bg-primary/10 text-primary border border-primary/20",
+    tech: "bg-primary/10 text-accent-green dark:text-accent-green border-accent-green/20",
     difficulty: {
-      Beginner: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
-      Intermediate: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-      Advanced: "bg-rose-500/10 text-rose-400 border border-rose-500/20",
+      Beginner: "bg-success/10 text-success border-success/30 shadow-[0_0_8px_rgba(95,191,80,0.1)]",
+      Intermediate: "bg-secondary/10 text-secondary border-secondary/30 shadow-[0_0_8px_rgba(196,154,74,0.1)]",
+      Advanced: "bg-danger/10 text-danger border-danger/30 shadow-[0_0_8px_rgba(214,69,69,0.1)]",
     },
-    meta: "bg-white/5 text-muted border border-white/10"
+    meta: "bg-card border-border text-muted"
   };
 
   const badgeStyle = type === 'difficulty' 

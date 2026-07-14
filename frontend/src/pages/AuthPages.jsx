@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import { Sparkles, Terminal, CheckCircle2, Lock, Mail, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Lock, User, Terminal, Sparkles, Plus, Check } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
 import Card from '../components/Card.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
-import Badge from '../components/Badge.jsx';
 import Logo from '../components/Logo.jsx';
 
 export default function AuthPages() {
@@ -15,7 +14,7 @@ export default function AuthPages() {
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') === 'login' ? 'login' : 'register';
 
-  // State
+  // Form Fields State
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,23 +23,21 @@ export default function AuthPages() {
   
   // Custom skills / interest inputs
   const [skillInput, setSkillInput] = useState('');
-  const [interestInput, setInterestInput] = useState('');
-  
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Suggested values
-  const suggestedSkills = ['React', 'Node.js', 'Python', 'Solidity', 'WebSockets', 'Mongoose', 'Docker', 'Git', 'AWS'];
+  // Suggested tags
+  const suggestedSkills = ['React', 'Node.js', 'Python', 'Solidity', 'WebSockets', 'Docker', 'Git', 'AWS'];
   const suggestedInterests = ['Web Dev', 'AI/ML', 'Blockchain', 'IoT', 'Cybersecurity', 'Cloud'];
 
-  // Redirect if already logged in
+  // Redirect if logged in
   useEffect(() => {
     if (user) {
       navigate('/dashboard');
     }
   }, [user, navigate]);
 
-  // Pre-fill landing page configurations
+  // Pre-fill interests from query param
   useEffect(() => {
     const domainParam = searchParams.get('domain');
     if (domainParam) {
@@ -92,90 +89,110 @@ export default function AuthPages() {
   };
 
   return (
-    <div className="bg-background min-h-screen text-text flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Decorative Blur Background Blobs */}
-      <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-primary/5 blur-[120px] pointer-events-none animate-float"></div>
-      <div className="absolute bottom-[10%] right-[-15%] w-[450px] h-[450px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none animate-float [animation-delay:2s]"></div>
+    <div className="bg-background min-h-screen text-text flex items-center justify-center p-6 relative overflow-hidden font-sans transition-colors duration-300">
+      
+      {/* Floating Streetlight Particles & Night Vignette */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-black/30" />
+        
+        {/* Animated glowing orbs representing Los Santos neon lights */}
+        <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] rounded-full bg-accent-orange/5 blur-[100px] animate-light-pulse" />
+        <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px] animate-light-pulse" style={{ animationDelay: '2s' }} />
+        
+        {/* Floating particles */}
+        <div className="absolute top-[30%] left-[40%] w-1.5 h-1.5 bg-secondary rounded-full animate-pulse opacity-40" />
+        <div className="absolute bottom-[35%] right-[30%] w-2 h-2 bg-accent-orange rounded-full animate-pulse opacity-40" style={{ animationDelay: '1s' }} />
+      </div>
 
       <motion.div 
-        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        initial={{ opacity: 0, y: 35, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="w-full max-w-xl z-10 py-12"
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-xl z-10 py-8"
       >
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="mb-3">
+          <div className="mb-4">
             <Logo size="lg" showText={false} />
           </div>
-          <h2 className="text-title font-extrabold bg-gradient-to-b from-white to-muted bg-clip-text text-transparent">
-            Welcome to ProjectPilot
+          <h2 className="font-heading text-title md:text-5xl font-black text-text uppercase tracking-wide">
+            WELCOME TO LOS SANTOS HQ
           </h2>
-          <p className="text-sm text-muted mt-1.5">
-            Analyze tech designs, generate synopses, and build roadmap schedules.
+          <p className="text-xs text-muted font-bold tracking-widest uppercase mt-1">
+            PROJECTPILOT DEV TERMINAL
           </p>
         </div>
 
-        <Card className="border border-white/10 shadow-2xl p-8">
-          {/* Tab Selector */}
-          <div className="flex bg-white/5 p-1 rounded-xl border border-white/5 mb-6">
+        <Card className="border border-border shadow-hud p-8 bg-card rounded-[18px]">
+          {/* Tab Selector with spring slide tracking */}
+          <div className="flex bg-black/10 dark:bg-black/20 p-1.5 rounded-[18px] border border-border mb-8 relative">
             <button
               onClick={() => handleTabChange('login')}
-              className={`flex-1 py-2 text-center text-sm font-medium rounded-lg transition duration-200 ${
-                activeTab === 'login' ? 'bg-primary text-white shadow-md' : 'text-muted hover:text-white'
+              className={`flex-1 py-3 text-center text-xs font-heading font-black tracking-wider uppercase rounded-xl transition duration-200 z-10 select-none cursor-pointer ${
+                activeTab === 'login' ? 'text-white' : 'text-muted hover:text-text'
               }`}
             >
               Sign In
             </button>
             <button
               onClick={() => handleTabChange('register')}
-              className={`flex-1 py-2 text-center text-sm font-medium rounded-lg transition duration-200 ${
-                activeTab === 'register' ? 'bg-primary text-white shadow-md' : 'text-muted hover:text-white'
+              className={`flex-1 py-3 text-center text-xs font-heading font-black tracking-wider uppercase rounded-xl transition duration-200 z-10 select-none cursor-pointer ${
+                activeTab === 'register' ? 'text-white' : 'text-muted hover:text-text'
               }`}
             >
-              Register
+              Register Account
             </button>
+            {/* Sliding backdrop */}
+            <motion.div
+              layoutId="auth-tab-active"
+              className="absolute top-1.5 bottom-1.5 left-1.5 bg-gradient-to-r from-primary to-accent-green rounded-xl z-0"
+              style={{
+                width: 'calc(50% - 12px)',
+                x: activeTab === 'login' ? '0%' : '100%',
+              }}
+              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+            />
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Authentication forms */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             <AnimatePresence mode="wait">
               {errorMsg && (
                 <motion.div 
                   key="error"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl flex items-start gap-2.5 animate-shake"
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  className="p-4 bg-danger/10 border border-danger/30 text-danger text-xs rounded-xl flex items-start gap-2.5 animate-shake"
                 >
-                  <Terminal size={14} className="shrink-0 mt-0.5" />
-                  <span>{errorMsg}</span>
+                  <Terminal size={15} className="shrink-0 mt-0.5" />
+                  <span className="font-bold tracking-wide font-sans">{errorMsg}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             {activeTab === 'register' && (
               <Input
-                label="Full Name"
+                label="Full Developer Name"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Alex Mercer"
+                placeholder="e.g. Carl Johnson"
                 required
               />
             )}
 
             <Input
-              label="Email Address"
+              label="Secure Email Address"
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="alex@example.com"
+              placeholder="e.g. cj@grovestreet.com"
               required
             />
 
             <Input
-              label="Password"
+              label="Access Code (Password)"
               id="password"
               type="password"
               value={password}
@@ -184,19 +201,24 @@ export default function AuthPages() {
               required
             />
 
-            {/* Custom Register Fields (Skills & Interests tags) */}
+            {/* Custom Register setup fields */}
             {activeTab === 'register' && (
-              <div className="space-y-4 pt-2 border-t border-white/5">
-                {/* Skills tags */}
-                <div>
-                  <label className="text-sm font-medium text-muted block mb-2">My Skills Set</label>
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6 pt-4 border-t border-border"
+              >
+                {/* Skill selectors */}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-muted uppercase tracking-widest block">Configure Tech Skill Stack</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={skillInput}
                       onChange={(e) => setSkillInput(e.target.value)}
-                      placeholder="Add skill (e.g. Python)"
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-primary/50"
+                      placeholder="Type custom skill..."
+                      className="flex-1 bg-black/10 dark:bg-black/25 border border-border rounded-[18px] px-4 py-2.5 text-xs text-text outline-none focus:border-secondary"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
@@ -204,32 +226,28 @@ export default function AuthPages() {
                         }
                       }}
                     />
-                    <Button variant="secondary" className="px-3 py-2 text-xs" onClick={() => handleAddSkill(skillInput)}>
+                    <Button variant="secondary" onClick={() => handleAddSkill(skillInput)} className="px-4 py-2 text-xs">
                       Add
                     </Button>
                   </div>
-                  {/* Skill Badge Lists */}
-                  <div className="mt-3 flex flex-wrap gap-1.5">
+                  {/* List active skills */}
+                  <div className="flex flex-wrap gap-1.5 mt-2">
                     {skills.map((skill, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded text-xs select-none"
-                      >
+                      <span key={idx} className="inline-flex items-center gap-1 bg-primary/10 text-accent-green border border-accent-green/20 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">
                         {skill}
-                        <button type="button" className="hover:text-rose-400 font-bold" onClick={() => handleRemoveSkill(skill)}>
-                          ×
-                        </button>
+                        <button type="button" onClick={() => handleRemoveSkill(skill)} className="hover:text-danger font-bold ml-1 cursor-pointer">×</button>
                       </span>
                     ))}
                   </div>
-                  <div className="mt-2 text-[10px] text-muted flex flex-wrap gap-1 items-center">
-                    <span>Suggestions:</span>
+                  {/* Suggestions list */}
+                  <div className="mt-2 text-[9px] text-muted flex flex-wrap gap-1.5 items-center">
+                    <span className="font-semibold uppercase tracking-wider">Suggested:</span>
                     {suggestedSkills.filter(s => !skills.includes(s)).slice(0, 5).map((s, idx) => (
                       <button
                         type="button"
                         key={idx}
                         onClick={() => handleAddSkill(s)}
-                        className="hover:text-white underline cursor-pointer"
+                        className="hover:text-secondary underline cursor-pointer"
                       >
                         {s}
                       </button>
@@ -237,10 +255,10 @@ export default function AuthPages() {
                   </div>
                 </div>
 
-                {/* Interest tags */}
-                <div>
-                  <label className="text-sm font-medium text-muted block mb-2">Interested Domains</label>
-                  <div className="flex flex-wrap gap-2">
+                {/* Interest domains selector */}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-muted uppercase tracking-widest block">Select Target Domains</label>
+                  <div className="flex flex-wrap gap-1.5">
                     {suggestedInterests.map((interest, idx) => {
                       const selected = interests.includes(interest);
                       return (
@@ -248,10 +266,10 @@ export default function AuthPages() {
                           type="button"
                           key={idx}
                           onClick={() => handleToggleInterest(interest)}
-                          className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
-                            selected
-                              ? 'bg-secondary border-secondary text-white'
-                              : 'bg-white/5 border-white/10 text-muted hover:text-white hover:border-white/20'
+                          className={`text-[10px] font-heading font-black tracking-wider uppercase px-3 py-1.5 rounded-xl border transition-all ${
+                            selected 
+                              ? 'bg-secondary border-secondary text-white shadow-hud' 
+                              : 'bg-black/10 dark:bg-black/25 border-border text-muted hover:text-text'
                           }`}
                         >
                           {interest}
@@ -260,40 +278,46 @@ export default function AuthPages() {
                     })}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )}
 
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button type="submit" variant="glow" className="w-full py-3 mt-4 flex items-center justify-center gap-2" disabled={loading}>
+            <div className="pt-2">
+              <Button type="submit" variant="glow" className="w-full py-3 flex items-center justify-center gap-2" disabled={loading}>
                 {loading ? (
                   <motion.span
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                    className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full"
+                    className="inline-block w-4.5 h-4.5 border-2 border-white/40 border-t-white rounded-full"
                   />
                 ) : (
-                  activeTab === 'login' ? 'Sign In' : 'Register Account'
+                  <>
+                    {activeTab === 'login' ? 'SIGN IN DEPLOYMENT' : 'INITIALIZE ACCOUNT'}
+                    <Sparkles size={14} className="animate-pulse" />
+                  </>
                 )}
               </Button>
-            </motion.div>
+            </div>
           </form>
 
-          {/* Switch Footer text */}
-          <p className="mt-6 text-center text-xs text-muted">
+          {/* Footer controls redirection text */}
+          <p className="mt-8 text-center text-xs text-muted font-sans font-medium">
             {activeTab === 'login' ? (
               <>
-                Don't have an account?{' '}
-                <button onClick={() => handleTabChange('register')} className="text-primary hover:underline font-semibold bg-transparent border-none">
+                Need to create a new profile?{' '}
+                <button 
+                  onClick={() => handleTabChange('register')} 
+                  className="text-secondary hover:text-accent-orange font-bold hover:underline bg-transparent border-none cursor-pointer transition-colors"
+                >
                   Register here
                 </button>
               </>
             ) : (
               <>
-                Already have an account?{' '}
-                <button onClick={() => handleTabChange('login')} className="text-primary hover:underline font-semibold bg-transparent border-none">
+                Already registered in the vault?{' '}
+                <button 
+                  onClick={() => handleTabChange('login')} 
+                  className="text-secondary hover:text-accent-orange font-bold hover:underline bg-transparent border-none cursor-pointer transition-colors"
+                >
                   Sign in here
                 </button>
               </>

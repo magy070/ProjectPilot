@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../context/AuthContext.jsx';
-import { Sparkles, Calendar, Users, Code, ChevronRight, Copy, Check, FileText, ArrowLeft, GitCommit, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Calendar, Users, Code, Copy, Check, FileText, ArrowLeft, GitCommit, CheckCircle2, Star, HelpCircle } from 'lucide-react';
 import Card from '../components/Card.jsx';
 import Button from '../components/Button.jsx';
 import Badge from '../components/Badge.jsx';
@@ -30,7 +31,7 @@ export default function ProjectDetails() {
       const res = await api.post(`/api/ai/synopsis/${id}`);
       return res.data.synopsis;
     },
-    enabled: false // Triggered on-demand by user
+    enabled: false
   });
 
   // Fetch Prompt
@@ -40,7 +41,7 @@ export default function ProjectDetails() {
       const res = await api.post(`/api/ai/prompt/${id}`);
       return res.data.prompt;
     },
-    enabled: false // Triggered on-demand by user
+    enabled: false
   });
 
   const handleCopyPrompt = () => {
@@ -62,17 +63,18 @@ export default function ProjectDetails() {
   if (projectLoading) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-20 text-center animate-pulse space-y-6">
-        <div className="h-8 w-1/3 bg-white/10 rounded mx-auto"></div>
-        <div className="h-32 bg-white/5 rounded-xl"></div>
-        <div className="h-6 w-1/2 bg-white/10 rounded mx-auto"></div>
+        <div className="h-10 w-1/3 bg-black/10 dark:bg-white/5 rounded-xl mx-auto"></div>
+        <div className="h-32 bg-black/10 dark:bg-white/5 rounded-xl"></div>
+        <div className="h-6 w-1/2 bg-black/10 dark:bg-white/5 rounded-xl mx-auto"></div>
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="max-w-4xl mx-auto px-6 py-20 text-center space-y-6">
-        <h2 className="text-xl font-bold text-rose-500">Project Not Found</h2>
+      <div className="max-w-4xl mx-auto px-6 py-20 text-center space-y-6 font-sans">
+        <HelpCircle size={48} className="mx-auto text-danger opacity-85" />
+        <h2 className="font-heading text-title font-black text-danger uppercase tracking-wide">Project Not Found</h2>
         <Button variant="secondary" onClick={() => navigate('/dashboard')}>
           Back to Dashboard
         </Button>
@@ -82,7 +84,7 @@ export default function ProjectDetails() {
 
   // Dynamic Timeline Roadmap Generator
   const getDynamicRoadmap = () => {
-    let totalDays = 30; // default fallback
+    let totalDays = 30;
     const timeStr = project.estimatedTime.toLowerCase().trim();
     const matchNum = timeStr.match(/\d+/);
     if (matchNum) {
@@ -98,228 +100,178 @@ export default function ProjectDetails() {
 
     const useHours = totalDays <= 3;
     const totalUnits = useHours ? totalDays * 8 : totalDays;
+    const unitLabel = useHours ? 'Hour' : 'Day';
 
-    const formatDuration = (units) => {
-      if (useHours) {
-        return `${units} ${units === 1 ? 'Hour' : 'Hours'}`;
-      }
-      if (units >= 7 && units % 7 === 0) {
-        const weeks = units / 7;
-        return `${weeks} ${weeks > 1 ? 'Weeks' : 'Week'}`;
-      }
-      return `${units} ${units === 1 ? 'Day' : 'Days'}`;
-    };
-
-    const isGame = project.domain.toLowerCase().includes('game') || 
-                   project.techStack.some(t => ['pygame', 'unity', 'phaser', 'canvas', 'game'].includes(t.toLowerCase()));
+    const segmentSize = Math.max(1, Math.floor(totalUnits / 4));
     
-    const isScriptOrScraper = project.domain.toLowerCase().includes('scraper') || 
-                              project.name.toLowerCase().includes('scraper') ||
-                              project.techStack.some(t => ['beautifulsoup', 'selenium', 'pandas', 'scrapy', 'cheerio'].includes(t.toLowerCase()));
-
-    let phases = [];
-
-    if (isGame) {
-      phases = [
-        {
-          name: "Concept & Asset Design",
-          pct: 0.15,
-          details: "Define the game loop rules, control mechanics, and design/import static sprites, fonts, and sound files."
-        },
-        {
-          name: "Core Gameplay Mechanics",
-          pct: 0.35,
-          details: `Initialize the screen update canvas. Bind controller keyboard keys and implement basic player movements using ${project.techStack.join(', ')}.`
-        },
-        {
-          name: "Game State & Scoring System",
-          pct: 0.25,
-          details: "Build the start menu, game-over trigger overlays, and score calculations. Increase enemy velocity as the score escalates."
-        },
-        {
-          name: "SFX & Visual Adjustments",
-          pct: 0.15,
-          details: "Load audio effects for collisions, player shooting, and state changes. Align graphic layers and fix visual bugs."
-        },
-        {
-          name: "Playtesting & Packaging",
-          pct: 0.10,
-          details: "Run edge-to-edge hitbox testing. Resolve canvas boundary leaks and compile the final executable."
-        }
-      ];
-    } else if (isScriptOrScraper) {
-      phases = [
-        {
-          name: "Target HTML Inspection",
-          pct: 0.20,
-          details: `Analyze DOM attributes and selectors of the target web pages. Select tools matching: ${project.techStack.join(', ')}.`
-        },
-        {
-          name: "Parser Logic & Loop Core",
-          pct: 0.40,
-          details: "Setup target connection protocols. Retrieve document strings, implement extraction filters, and parse table rows."
-        },
-        {
-          name: "Data Cleansing & Exporting",
-          pct: 0.20,
-          details: "Clean raw text outputs, drop invalid fields, and export logs to structured JSON or CSV file formats."
-        },
-        {
-          name: "Rate Limiting & Exception Handling",
-          pct: 0.20,
-          details: "Configure sleep intervals between request batches to bypass anti-scraping firewalls. Wrap in try-catch guards."
-        }
-      ];
-    } else {
-      phases = [
-        {
-          name: "Requirements & Mockups",
-          pct: 0.15,
-          details: `Document layout scopes. Prototype mock views matching: ${project.name}.`
-        },
-        {
-          name: "API & Data Schema Design",
-          pct: 0.20,
-          details: `Configure databases models mapping keys for: ${project.techStack.slice(0, 3).join(', ')}.`
-        },
-        {
-          name: "Backend Core Build",
-          pct: 0.25,
-          details: "Bootstrap API controllers, add route routers, and set up Zod validator filters and JWT middleware shields."
-        },
-        {
-          name: "Frontend UI Integration",
-          pct: 0.25,
-          details: "Develop user interface components, hook up API response handlers, and setup state manager caching."
-        },
-        {
-          name: "Testing & Cloud Release",
-          pct: 0.15,
-          details: "Write test suites, compile production bundles, customize environment values, and deploy."
-        }
-      ];
-    }
-
-    let allocatedUnits = 0;
-    const roadmap = phases.map((phase, idx) => {
-      let durationUnits = Math.round(totalUnits * phase.pct);
-      if (durationUnits < 1) durationUnits = 1;
-      
-      if (idx === phases.length - 1 && totalUnits > phases.length) {
-        durationUnits = Math.max(1, totalUnits - allocatedUnits);
-      } else {
-        allocatedUnits += durationUnits;
+    return [
+      {
+        phase: "PHASE 01: REQS & SCHEMA DESIGN",
+        timeline: `${unitLabel} 1 - ${segmentSize}`,
+        description: "Specify entity relations and configure local SQLite/MongoDB container setups.",
+        tasks: [
+          "Validate structural database design",
+          "Initialize Git branches and Docker instances",
+          "Map initial user journeys and API specs"
+        ]
+      },
+      {
+        phase: "PHASE 02: CONTROLLER & API DEPLOY",
+        timeline: `${unitLabel} ${segmentSize + 1} - ${segmentSize * 2}`,
+        description: "Implement security guards and core controller endpoints.",
+        tasks: [
+          "Code authentication routes and JWT handlers",
+          "Perform integration testing on local database controllers",
+          "Set up automated unit testing suites"
+        ]
+      },
+      {
+        phase: "PHASE 03: INTERFACE ASSEMBLY",
+        timeline: `${unitLabel} ${(segmentSize * 2) + 1} - ${segmentSize * 3}`,
+        description: "Assemble UI pages and hook up context providers.",
+        tasks: [
+          "Build landing pages and form components",
+          "Connect state providers to API hooks",
+          "Implement responsive layout styling adjustments"
+        ]
+      },
+      {
+        phase: "PHASE 04: QA AUDITING & STAGING",
+        timeline: `${unitLabel} ${(segmentSize * 3) + 1} - ${totalUnits}`,
+        description: "Perform end-to-end routing audits and push to deployment.",
+        tasks: [
+          "Verify visual layouts on mobile viewports",
+          "Run performance optimization checks",
+          "Deploy build to Vercel/Render hosting"
+        ]
       }
-
-      return {
-        phase: phase.name,
-        duration: formatDuration(durationUnits),
-        details: phase.details
-      };
-    });
-
-    return roadmap;
+    ];
   };
 
-  const roadmapSteps = getDynamicRoadmap();
+  const roadmapPhases = getDynamicRoadmap();
 
   return (
-    <div className="bg-background min-h-screen text-text py-12 relative overflow-hidden font-sans">
+    <div className="bg-background min-h-screen text-text py-12 relative overflow-hidden font-sans transition-colors duration-300">
+      
+      {/* Background Orbs */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-primary/5 blur-[120px] pointer-events-none animate-light-pulse"></div>
+        <div className="absolute bottom-[20%] right-[-15%] w-[450px] h-[450px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none animate-light-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+
       <div className="max-w-4xl mx-auto px-6 relative z-10 space-y-8">
         
-        {/* Back navigation */}
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="inline-flex items-center gap-2 text-xs text-muted hover:text-white transition duration-200"
+        {/* Navigation back */}
+        <button 
+          onClick={() => navigate(-1)} 
+          className="flex items-center gap-2 text-xs font-bold text-muted hover:text-text uppercase tracking-widest cursor-pointer select-none bg-transparent border-none"
         >
-          <ArrowLeft size={14} /> Back to Discover
+          <ArrowLeft size={14} /> Back to Grid
         </button>
 
-        {/* Project Header Info */}
-        <header className="space-y-4">
-          <div className="flex flex-wrap items-center gap-3">
+        {/* Cinematic Header Block */}
+        <header className="glass-card p-8 border border-border bg-card shadow-warm rounded-[18px] relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-secondary to-accent-orange" />
+          
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <Badge type="tech">{project.domain}</Badge>
             <Badge type="difficulty">{project.difficulty}</Badge>
-            <span className="text-xs text-muted border border-white/10 bg-white/2 px-2 py-0.5 rounded">
-              {project.domain}
-            </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+
+          <h1 className="font-heading text-title md:text-5xl font-black text-text uppercase tracking-wide leading-none mb-4">
             {project.name}
           </h1>
-          <p className="text-muted text-sm leading-relaxed max-w-3xl">
+          
+          <p className="text-sm text-muted leading-relaxed font-sans mb-6">
             {project.description}
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-4 border-t border-white/5 text-xs text-muted">
-            <div className="flex items-center gap-2">
-              <Calendar size={16} className="text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-border text-xs text-muted font-sans font-medium">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-secondary/15 rounded-xl text-secondary">
+                <Calendar size={18} />
+              </div>
               <div>
-                <span className="block font-medium">Estimated Timeframe</span>
-                <strong className="text-white text-sm">{project.estimatedTime}</strong>
+                <span className="block text-[9px] uppercase tracking-wider">Timeframe</span>
+                <strong className="text-text text-sm">{project.estimatedTime}</strong>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Users size={16} className="text-secondary" />
+            
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/15 rounded-xl text-accent-green">
+                <Users size={18} />
+              </div>
               <div>
-                <span className="block font-medium">Ideal Team Size</span>
-                <strong className="text-white text-sm">{project.teamSize} {project.teamSize > 1 ? 'Developers' : 'Developer'}</strong>
+                <span className="block text-[9px] uppercase tracking-wider">Crew Size</span>
+                <strong className="text-text text-sm">{project.teamSize} {project.teamSize > 1 ? 'Developers' : 'Developer'}</strong>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Code size={16} className="text-primary" />
+
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-accent-orange/15 rounded-xl text-accent-orange">
+                <Code size={18} />
+              </div>
               <div>
-                <span className="block font-medium">Core Stack Base</span>
-                <strong className="text-white text-sm">{project.techStack.slice(0, 3).join(', ')}</strong>
+                <span className="block text-[9px] uppercase tracking-wider">Tech Base</span>
+                <strong className="text-text text-sm">{project.techStack.slice(0, 3).join(', ')}</strong>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Tab Controls */}
-        <div className="flex border-b border-white/5 bg-white/1 p-1 rounded-xl">
+        {/* Animated Tabs Selector with Hydraulics Bounces */}
+        <div className="flex bg-black/10 dark:bg-black/20 p-1.5 rounded-[18px] border border-border relative">
           {[
             { id: 'overview', label: 'Overview' },
             { id: 'synopsis', label: 'AI Synopsis' },
             { id: 'prompt', label: 'AI Prompt' },
-            { id: 'roadmap', label: 'Timeline Roadmap' }
+            { id: 'roadmap', label: 'Roadmap' }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2 text-center text-xs font-semibold rounded-lg transition duration-200 ${
-                activeTab === tab.id 
-                  ? 'bg-primary text-white shadow-md' 
-                  : 'text-muted hover:text-white'
+              className={`flex-1 py-3 text-center text-xs font-heading font-black tracking-wider uppercase rounded-xl transition duration-200 z-10 select-none cursor-pointer ${
+                activeTab === tab.id ? 'text-white' : 'text-muted hover:text-text'
               }`}
             >
               {tab.label}
             </button>
           ))}
+          {/* Animated background bar */}
+          <motion.div
+            layoutId="project-tab-active"
+            className="absolute top-1.5 bottom-1.5 left-1.5 bg-gradient-to-r from-primary to-accent-green rounded-xl z-0"
+            style={{
+              width: 'calc(25% - 6px)',
+              x: activeTab === 'overview' ? '0%' : activeTab === 'synopsis' ? '100%' : activeTab === 'prompt' ? '200%' : '300%',
+            }}
+            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+          />
         </div>
 
         {/* Tab Panels */}
-        <section className="mt-6">
+        <section className="mt-6 z-10">
           
           {/* OVERVIEW TAB */}
           {activeTab === 'overview' && (
-            <div className="space-y-6">
-              
-              {/* Problem statement */}
-              <Card className="border border-white/5 bg-white/1 space-y-3">
-                <h3 className="font-bold text-sm text-white uppercase tracking-wider">Problem Statement</h3>
-                <p className="text-sm text-muted leading-relaxed">{project.problemStatement}</p>
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="space-y-6"
+            >
+              <Card className="border border-border bg-card p-6 space-y-3">
+                <h3 className="font-heading font-black text-sm text-text uppercase tracking-wider border-b border-border pb-2.5">Problem Statement</h3>
+                <p className="text-xs text-muted leading-relaxed font-sans">{project.problemStatement}</p>
               </Card>
 
-              {/* Objectives & Features Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
                 {/* Objectives */}
-                <Card className="border border-white/5 bg-white/1 space-y-3">
-                  <h3 className="font-bold text-sm text-white uppercase tracking-wider">Project Objectives</h3>
+                <Card className="border border-border bg-card p-6 space-y-3">
+                  <h3 className="font-heading font-black text-sm text-text uppercase tracking-wider border-b border-border pb-2.5">Objectives</h3>
                   <ul className="space-y-2">
                     {project.objectives.map((obj, i) => (
-                      <li key={i} className="text-xs text-muted flex items-start gap-2">
-                        <span className="text-primary font-bold mt-0.5">•</span>
+                      <li key={i} className="text-xs text-muted flex items-start gap-2.5 font-sans font-medium">
+                        <span className="text-secondary font-bold mt-0.5">•</span>
                         <span>{obj}</span>
                       </li>
                     ))}
@@ -327,158 +279,166 @@ export default function ProjectDetails() {
                 </Card>
 
                 {/* Features */}
-                <Card className="border border-white/5 bg-white/1 space-y-3">
-                  <h3 className="font-bold text-sm text-white uppercase tracking-wider">Main Product Features</h3>
+                <Card className="border border-border bg-card p-6 space-y-3">
+                  <h3 className="font-heading font-black text-sm text-text uppercase tracking-wider border-b border-border pb-2.5">Features</h3>
                   <ul className="space-y-2">
                     {project.features.map((feat, i) => (
-                      <li key={i} className="text-xs text-muted flex items-start gap-2">
-                        <span className="text-secondary font-bold mt-0.5">✓</span>
+                      <li key={i} className="text-xs text-muted flex items-start gap-2.5 font-sans font-medium">
+                        <span className="text-success font-bold mt-0.5">✓</span>
                         <span>{feat}</span>
                       </li>
                     ))}
                   </ul>
                 </Card>
-
               </div>
 
-              {/* Skill Stack details */}
-              <Card className="border border-white/5 bg-white/1 space-y-4">
-                <h3 className="font-bold text-sm text-white uppercase tracking-wider">Resume & CV Value</h3>
-                <p className="text-xs text-muted leading-relaxed">{project.resumeValue}</p>
+              {/* CV Value */}
+              <Card className="border border-border bg-card p-6 space-y-4">
+                <h3 className="font-heading font-black text-sm text-text uppercase tracking-wider border-b border-border pb-2.5">Resume & CV Value</h3>
+                <p className="text-xs text-muted leading-relaxed font-sans">{project.resumeValue}</p>
 
-                <div className="pt-4 border-t border-white/5 flex flex-col sm:flex-row gap-4 justify-between">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-muted block mb-1.5">Required Skill Set:</span>
+                <div className="pt-4 border-t border-border flex flex-wrap gap-4 justify-between items-center">
+                  <div className="space-y-1">
+                    <span className="text-[9px] uppercase font-bold text-muted block">Required Skillset Stack</span>
                     <div className="flex flex-wrap gap-1.5">
-                      {project.requiredSkills.map((s, idx) => (
-                        <span key={idx} className="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-white text-[10px]">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-muted block mb-1.5">Full Stack Base:</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.techStack.map((s, idx) => (
-                        <span key={idx} className="bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded text-[10px] font-semibold">
-                          {s}
+                      {project.techStack.map((tech, idx) => (
+                        <span key={idx} className="bg-primary/10 text-accent-green px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-accent-green/10">
+                          {tech}
                         </span>
                       ))}
                     </div>
                   </div>
                 </div>
               </Card>
-
-            </div>
+            </motion.div>
           )}
 
-          {/* SYNOPSIS TAB */}
+          {/* AI SYNOPSIS TAB */}
           {activeTab === 'synopsis' && (
-            <div className="space-y-6">
-              {!synopsisData && !synopsisLoading ? (
-                <Card className="border border-white/5 bg-white/1 p-12 text-center space-y-4">
-                  <FileText className="mx-auto text-muted" size={40} />
-                  <p className="text-sm text-muted max-w-sm mx-auto">
-                    Generate an AI technical synopsis containing abstract, scopes, objectives, and outcomes for your documentation folders.
-                  </p>
-                  <Button variant="glow" onClick={handleTriggerSynopsis} className="mx-auto">
-                    Generate AI Synopsis
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="space-y-6"
+            >
+              {!synopsisData && !synopsisLoading && (
+                <Card className="border border-border bg-card p-12 text-center space-y-5 rounded-[18px]">
+                  <div className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto text-secondary shadow-warm">
+                    <FileText size={28} />
+                  </div>
+                  <div className="max-w-md mx-auto space-y-2">
+                    <h3 className="font-heading font-black text-lg text-text uppercase">Generate Project Synopsis</h3>
+                    <p className="text-xs text-muted leading-relaxed font-sans">
+                      Let the ProjectPilot engine generate a fully structured technical proposal featuring abstracts, problem statements, and scopes.
+                    </p>
+                  </div>
+                  <Button variant="glow" onClick={handleTriggerSynopsis} className="mx-auto px-6 py-2.5">
+                    <Sparkles size={14} /> Generate Custom Synopsis
                   </Button>
                 </Card>
-              ) : synopsisLoading ? (
-                <div className="space-y-6 animate-pulse">
-                  <div className="h-8 w-1/3 bg-white/10 rounded"></div>
-                  <div className="h-24 bg-white/5 rounded-xl"></div>
-                  <div className="h-40 bg-white/5 rounded-xl"></div>
-                </div>
-              ) : (
-                <div className="space-y-6 animate-fade-in">
-                  
-                  {/* Synopsis Header */}
-                  <div className="flex justify-between items-center bg-white/5 border border-white/10 p-4 rounded-xl">
-                    <span className="text-xs text-muted flex items-center gap-2">
-                      <Sparkles size={14} className="text-primary animate-pulse" /> Custom AI Synopsis Generated
-                    </span>
-                    <span className="text-xs text-muted font-mono">Status: Ready</span>
+              )}
+
+              {synopsisLoading && (
+                <div className="space-y-6">
+                  <div className="glass-card p-8 border border-border animate-pulse space-y-4 bg-card">
+                    <div className="h-6 w-1/3 bg-black/10 dark:bg-white/5 rounded-xl"></div>
+                    <div className="h-20 w-full bg-black/5 dark:bg-white/5 rounded-xl"></div>
+                    <div className="h-6 w-1/2 bg-black/10 dark:bg-white/5 rounded-xl"></div>
                   </div>
-
-                  {/* Title & Abstract */}
-                  <Card className="border border-white/5 bg-white/1 space-y-3">
-                    <h2 className="text-lg font-bold text-white">{synopsisData.title}</h2>
-                    <h3 className="font-bold text-xs text-primary uppercase tracking-wider pt-2">Abstract Overview</h3>
-                    <p className="text-sm text-muted leading-relaxed">{synopsisData.abstract}</p>
-                  </Card>
-
-                  {/* Detailed scopes */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="border border-white/5 bg-white/1 space-y-3">
-                      <h3 className="font-bold text-xs text-secondary uppercase tracking-wider">Objectives Mapping</h3>
-                      <ul className="space-y-2">
-                        {synopsisData.objectives.map((obj, i) => (
-                          <li key={i} className="text-xs text-muted flex items-start gap-2">
-                            <span className="text-secondary font-bold">•</span>
-                            <span>{obj}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </Card>
-
-                    <Card className="border border-white/5 bg-white/1 space-y-3">
-                      <h3 className="font-bold text-xs text-primary uppercase tracking-wider">Scope Limits</h3>
-                      <ul className="space-y-2">
-                        {synopsisData.scope.map((scp, i) => (
-                          <li key={i} className="text-xs text-muted flex items-start gap-2">
-                            <span className="text-primary font-bold">•</span>
-                            <span>{scp}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </Card>
-                  </div>
-
-                  {/* Expected Outcomes */}
-                  <Card className="border border-white/5 bg-white/1 space-y-3">
-                    <h3 className="font-bold text-xs text-secondary uppercase tracking-wider">Expected Deliverables</h3>
-                    <p className="text-sm text-muted leading-relaxed">{synopsisData.expectedOutcome}</p>
-                  </Card>
-
                 </div>
               )}
-            </div>
+
+              {synopsisData && (
+                <Card className="border border-border bg-card p-8 space-y-6 rounded-[18px] shadow-warm">
+                  <div className="flex justify-between items-center border-b border-border pb-4">
+                    <h3 className="font-heading font-black text-lg text-text uppercase tracking-wider">TECHNICAL PROJECT PROPOSAL</h3>
+                    <Badge type="tech">Generated</Badge>
+                  </div>
+                  
+                  <div className="space-y-5 font-sans text-xs text-muted leading-relaxed">
+                    <div className="space-y-2">
+                      <h4 className="font-bold text-text uppercase tracking-wider">1. Project Abstract</h4>
+                      <p className="pl-2">{synopsisData.abstract}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="font-bold text-text uppercase tracking-wider">2. Problem Statement</h4>
+                      <p className="pl-2">{synopsisData.problemStatement}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-text uppercase tracking-wider">3. Objectives Mapping</h4>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {synopsisData.objectives?.map((obj, i) => (
+                            <li key={i}>{obj}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-text uppercase tracking-wider">4. Scope Limits</h4>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {synopsisData.scope?.map((scp, i) => (
+                            <li key={i}>{scp}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 pt-2">
+                      <h4 className="font-bold text-text uppercase tracking-wider">5. Expected Outcomes & Deliverables</h4>
+                      <p className="pl-2">{synopsisData.expectedOutcome}</p>
+                    </div>
+                  </div>
+                </Card>
+              )}
+            </motion.div>
           )}
 
           {/* AI PROMPT TAB */}
           {activeTab === 'prompt' && (
-            <div className="space-y-6">
-              {!promptData && !promptLoading ? (
-                <Card className="border border-white/5 bg-white/1 p-12 text-center space-y-4">
-                  <Code className="mx-auto text-muted" size={40} />
-                  <p className="text-sm text-muted max-w-sm mx-auto">
-                    Generate an optimized, ready-to-paste AI developer prompt containing instructions for ChatGPT, Claude, or Cursor coding workflows.
-                  </p>
-                  <Button variant="glow" onClick={handleTriggerPrompt} className="mx-auto">
-                    Generate Dev Prompt
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="space-y-6"
+            >
+              {!promptData && !promptLoading && (
+                <Card className="border border-border bg-card p-12 text-center space-y-5 rounded-[18px]">
+                  <div className="w-16 h-16 rounded-full bg-accent-orange/15 flex items-center justify-center mx-auto text-accent-orange shadow-warm">
+                    <Code size={28} />
+                  </div>
+                  <div className="max-w-md mx-auto space-y-2">
+                    <h3 className="font-heading font-black text-lg text-text uppercase">Generate Developer Instructions</h3>
+                    <p className="text-xs text-muted leading-relaxed font-sans">
+                      Extract ready-to-paste instruction prompts specifically optimized for Claude, Cursor, or ChatGPT developers.
+                    </p>
+                  </div>
+                  <Button variant="glow" onClick={handleTriggerPrompt} className="mx-auto px-6 py-2.5">
+                    <Sparkles size={14} /> Generate Prompt
                   </Button>
                 </Card>
-              ) : promptLoading ? (
-                <div className="space-y-6 animate-pulse">
-                  <div className="h-8 w-1/3 bg-white/10 rounded"></div>
-                  <div className="h-48 bg-white/5 rounded-xl"></div>
+              )}
+
+              {promptLoading && (
+                <div className="space-y-6">
+                  <div className="glass-card p-8 border border-border animate-pulse space-y-4 bg-card">
+                    <div className="h-6 w-1/3 bg-black/10 dark:bg-white/5 rounded-xl"></div>
+                    <div className="h-16 w-full bg-black/5 dark:bg-white/5 rounded-xl"></div>
+                  </div>
                 </div>
-              ) : (
-                <div className="space-y-4 animate-fade-in">
-                  
-                  <div className="flex justify-between items-center bg-white/5 border border-white/10 p-4 rounded-xl">
-                    <span className="text-xs text-muted">
-                      Prompt configured for: <strong>ChatGPT / Claude / Cursor</strong>
-                    </span>
-                    
-                    <Button variant="secondary" className="px-3.5 py-1.5 text-xs gap-1.5" onClick={handleCopyPrompt}>
+              )}
+
+              {promptData && (
+                <Card className="border border-border bg-card p-6 space-y-4 rounded-[18px] shadow-warm">
+                  <div className="flex justify-between items-center border-b border-border pb-4">
+                    <div className="text-left">
+                      <h4 className="font-heading font-black text-lg text-text uppercase tracking-wide">SYSTEM ARCHITECT INSTRUCTIONS</h4>
+                      <span className="text-[10px] font-bold text-muted uppercase tracking-wider block font-sans">COPY TO CURSOR OR CLAUDE CHAT</span>
+                    </div>
+                    <Button variant="glow" className="px-4 py-2 text-xs flex items-center gap-1.5" onClick={handleCopyPrompt}>
                       {copied ? (
                         <>
-                          <Check size={14} className="text-emerald-400" /> Copied!
+                          <Check size={14} /> Prompt Copied
                         </>
                       ) : (
                         <>
@@ -488,45 +448,54 @@ export default function ProjectDetails() {
                     </Button>
                   </div>
 
-                  <div className="bg-black/50 p-6 rounded-xl border border-white/5 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed text-muted whitespace-pre-wrap select-all">
+                  <div className="bg-black/10 dark:bg-black/35 p-6 rounded-xl border border-border font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed text-muted whitespace-pre-wrap select-all shadow-hud">
                     {promptData.content}
                   </div>
-
-                </div>
+                </Card>
               )}
-            </div>
+            </motion.div>
           )}
 
-          {/* ROADMAP TAB */}
+          {/* ROADMAP TIMELINE TAB */}
           {activeTab === 'roadmap' && (
-            <div className="space-y-8 animate-fade-in pl-6 border-l border-white/5 relative ml-6 pt-4">
-              {roadmapSteps.map((step, idx) => (
-                <div key={idx} className="relative group">
-                  
-                  {/* node dot */}
-                  <div className="absolute left-[-32px] top-1.5 w-4 h-4 rounded-full bg-background border border-primary/50 flex items-center justify-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary/70"></span>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-mono bg-white/5 border border-white/5 px-2 py-0.5 rounded text-muted">
-                        PHASE 0{idx + 1}
-                      </span>
-                      <h4 className="font-bold text-white text-base">
-                        {step.phase}
-                      </h4>
-                      <span className="text-xs text-primary font-semibold">
-                        ({step.duration})
-                      </span>
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="space-y-8 font-sans"
+            >
+              <div className="relative border-l-2 border-border ml-4 md:ml-32 pl-8 space-y-12 py-4">
+                {roadmapPhases.map((phase, idx) => (
+                  <div key={idx} className="relative group">
+                    
+                    {/* Node marker */}
+                    <div className="absolute left-[-42px] top-1 w-6 h-6 rounded-full bg-card border-2 border-secondary flex items-center justify-center group-hover:border-accent-orange transition duration-300">
+                      <span className="w-2.5 h-2.5 rounded-full bg-secondary group-hover:bg-accent-orange transition"></span>
                     </div>
-                    <p className="text-xs text-muted leading-relaxed max-w-2xl">
-                      {step.details}
-                    </p>
+
+                    <span className="absolute left-[-160px] top-1 text-xs font-heading font-black tracking-widest text-muted hidden md:block w-28 text-right uppercase">
+                      {phase.timeline}
+                    </span>
+
+                    <div className="space-y-3">
+                      <h4 className="font-heading font-black text-lg text-text uppercase tracking-wide group-hover:text-secondary transition duration-200">
+                        {phase.phase}
+                      </h4>
+                      <p className="text-xs text-muted leading-relaxed font-sans">{phase.description}</p>
+                      
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 pl-1.5">
+                        {phase.tasks.map((task, tIdx) => (
+                          <li key={tIdx} className="text-xs text-muted flex items-start gap-2.5 font-sans font-medium">
+                            <span className="text-accent-orange mt-0.5">•</span>
+                            <span>{task}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </motion.div>
           )}
 
         </section>
