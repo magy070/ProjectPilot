@@ -172,6 +172,16 @@
   animation: cinematicZoomVinewood 25s ease-in-out infinite;
 }
 
+/* Cinematic login zoom */
+@keyframes cinematicZoomLogin {
+  0%, 100% { transform: scale(1) translate(0px, 0px); }
+  50% { transform: scale(1.06) translate(-6px, 3px); }
+}
+
+.animate-cinematic-login {
+  animation: cinematicZoomLogin 30s ease-in-out infinite;
+}
+
 /* Spraypaint text gradient clip setup */
 .spray-text {
   background-size: 200% auto;
