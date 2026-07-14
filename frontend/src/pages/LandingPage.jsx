@@ -325,7 +325,7 @@ export default function LandingPage() {
       </section>
 
       {/* Downtown Los Santos Mid-Page Showcase */}
-      <section className="min-h-screen w-full relative overflow-hidden flex items-center justify-center z-20 font-sans border-y border-border">
+      <section className="min-h-screen w-full relative overflow-hidden flex items-center justify-center z-20 font-sans">
         {/* Background zoom container */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <img 
@@ -352,6 +352,10 @@ export default function LandingPage() {
               <path d="M10 50 C 30 30, 45 45, 50 50 C 55 45, 70 30, 90 50 C 70 42, 55 48, 50 50 C 45 48, 30 42, 10 50 Z" fill="currentColor" />
             </svg>
           </div>
+
+          {/* Top and Bottom Fades for seamless section transitions */}
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
         </div>
 
         {/* Ambient dust and light particles */}
@@ -453,7 +457,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works Section (Vinewood Sunset Backdrop) */}
-      <section id="how-it-works" className="min-h-screen w-full relative overflow-hidden flex flex-col justify-center items-center py-24 z-20 font-sans border-y border-border text-center">
+      <section id="how-it-works" className="min-h-screen w-full relative overflow-hidden flex flex-col justify-center items-center py-24 z-20 font-sans text-center">
         {/* Background zoom container */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <motion.img 
@@ -477,6 +481,10 @@ export default function LandingPage() {
 
           {/* Clouds */}
           <div className="absolute top-[10%] left-0 w-72 h-10 bg-white/5 blur-3xl rounded-full animate-cloud-slow" />
+
+          {/* Top and Bottom Fades for seamless section transitions */}
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
         </div>
 
         {/* Contents Container */}
