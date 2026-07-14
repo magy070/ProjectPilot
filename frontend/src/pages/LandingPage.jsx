@@ -17,6 +17,61 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
+function AnimatedNumber({ value }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const numericValue = parseInt(value.replace(/[^0-9]/g, ''), 10);
+  
+  useEffect(() => {
+    let start = 0;
+    const duration = 1800; // 1.8 seconds duration
+    const startTime = performance.now();
+
+    function updateNumber(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = progress * (2 - progress); // easeOutQuad
+      
+      setDisplayValue(Math.floor(easeProgress * numericValue));
+
+      if (progress < 1) {
+        requestAnimationFrame(updateNumber);
+      } else {
+        setDisplayValue(numericValue);
+      }
+    }
+
+    requestAnimationFrame(updateNumber);
+  }, [numericValue]);
+
+  const suffix = value.replace(/[0-9]/g, '');
+
+  return (
+    <span>
+      {displayValue}
+      {suffix}
+    </span>
+  );
+}
+
+function AnimatedStatCard({ value, label }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <motion.div 
+      whileInView={() => { setVisible(true); return {}; }}
+      viewport={{ once: true, amount: 0.2 }}
+      className="glass-card p-6 border border-[#C49A4A]/25 bg-[#1B1B1B]/75 rounded-[18px] text-center shadow-warm relative group overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="text-3xl md:text-5xl font-heading font-black text-secondary tracking-wide uppercase">
+        {visible ? <AnimatedNumber value={value} /> : "0"}
+      </div>
+      <div className="text-[10px] uppercase font-bold tracking-widest text-[#A1A1AA] mt-2">
+        {label}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function LandingPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -534,68 +589,263 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials Carousel (GTA Character Style Quote Cards) */}
-      <section className="max-w-4xl mx-auto px-6 py-20 relative z-20">
-        <div className="glass-card rounded-[18px] p-8 border border-border shadow-warm bg-card/90 relative overflow-hidden min-h-[220px] flex flex-col justify-between">
-          <div className="absolute top-4 right-6 text-secondary opacity-25">
-            <Star size={40} className="fill-current" />
+      {/* Community Reviews Section */}
+      <section className="py-24 relative z-20 overflow-hidden border-t border-border bg-[#121212] text-text font-sans">
+        
+        {/* Palm tree and skyline silhouettes inside section background */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] select-none z-0">
+          <svg className="absolute bottom-0 left-0 right-0 w-full h-48" viewBox="0 0 1200 100" preserveAspectRatio="none" fill="currentColor">
+            <path d="M 0 100 L 0 80 L 15 80 L 15 90 L 30 90 L 30 70 L 45 70 L 45 85 L 60 85 L 60 60 L 80 60 L 80 100 L 120 100 L 120 75 L 140 75 L 140 90 L 160 90 L 160 50 L 190 50 L 190 100 L 220 100 L 220 85 L 240 85 L 240 70 L 270 70 L 270 100 L 310 100 L 310 55 L 340 55 L 340 100 L 400 100 L 400 65 L 430 65 L 430 80 L 450 80 L 450 100 L 500 100 L 500 45 L 530 45 L 530 100 L 600 100 L 600 70 L 620 70 L 620 90 L 650 90 L 650 40 L 680 40 L 680 100 L 750 100 L 750 60 L 780 60 L 780 100 L 850 100 L 850 50 L 880 50 L 880 75 L 900 75 L 900 100 L 980 100 L 980 65 L 1020 65 L 1020 80 L 1050 80 L 1050 100 L 1120 100 L 1120 55 L 1150 55 L 1150 100 L 1200 100 Z" />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
+          
+          {/* Header */}
+          <div className="text-center mb-16 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[18px] border border-secondary/30 bg-black/45 backdrop-blur-sm text-[9px] font-bold uppercase tracking-widest text-secondary shadow-hud mx-auto animate-pulse">
+              ⭐ COMMUNITY FEEDS
+            </div>
+            <h2 className="font-heading text-title md:text-5xl font-black text-white uppercase tracking-wide">
+              What Builders Across Los Santos Say
+            </h2>
+            <p className="text-sm text-[#A1A1AA] max-w-md mx-auto">
+              Thousands of students have already built amazing projects using ProjectPilot.
+            </p>
           </div>
-          <div className="flex-1 flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTestimonial}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
-                className="text-center"
-              >
-                <p className="text-sm md:text-md italic font-sans text-text leading-relaxed px-4">
-                  "{testimonials[activeTestimonial].quote}"
-                </p>
-                <div className="mt-4">
-                  <h4 className="font-heading font-black text-secondary tracking-wider text-base uppercase">
-                    {testimonials[activeTestimonial].name}
-                  </h4>
-                  <span className="text-[10px] uppercase tracking-widest text-muted font-bold block">
-                    {testimonials[activeTestimonial].role}
-                  </span>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+
+          {/* 6 Review cards layout (Swipe carousel on mobile, Grid on desktop/tablet) */}
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={stagger}
+            className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto snap-x snap-mandatory pb-6 md:pb-0 scrollbar-none snap-center"
+          >
+            {[
+              {
+                name: "Gurmehak",
+                role: "Project Creator",
+                college: "Thapar University",
+                badge: "Top Creator",
+                review: "ProjectPilot completely changed how I approach building projects. The AI roadmap saved me weeks of planning."
+              },
+              {
+                name: "Sarah Williams",
+                role: "Computer Science Student",
+                college: "USC",
+                badge: "AI Builder",
+                review: "I found my final year project in less than five minutes. Everything was organized perfectly."
+              },
+              {
+                name: "Rohan Sharma",
+                role: "Hackathon Winner",
+                college: "IIT Delhi",
+                badge: "Hackathon Winner",
+                review: "The AI suggestions were surprisingly accurate. We built our prototype in just two days."
+              },
+              {
+                name: "Emily Carter",
+                role: "Frontend Developer",
+                college: "Stanford",
+                badge: "MERN Developer",
+                review: "I loved how every project came with proper documentation and implementation guidance."
+              },
+              {
+                name: "Arjun Mehta",
+                role: "Open Source Contributor",
+                college: "BITS Pilani",
+                badge: "Open Source Contributor",
+                review: "The roadmap and learning path helped me contribute to my first open source project."
+              },
+              {
+                name: "David Chen",
+                role: "Software Engineer",
+                college: "Uber",
+                badge: "Tech Lead",
+                review: "Feels like GitHub, Notion and ChatGPT had a premium GTA inspired child."
+              }
+            ].map((rev, index) => {
+              const initials = rev.name.split(' ').map(p => p[0]).join('').toUpperCase();
+              return (
+                <motion.div 
+                  key={index}
+                  variants={fadeUp}
+                  whileHover={{ y: -6, scale: 1.03 }}
+                  className="flex-shrink-0 w-[290px] sm:w-[320px] md:w-auto snap-center bg-[#1B1B1B]/75 border border-[#C49A4A]/25 hover:border-secondary transition-all duration-300 rounded-[18px] p-6 shadow-warm relative group overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  
+                  {/* Rating */}
+                  <div className="flex text-secondary gap-0.5 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={13} className="fill-current" />
+                    ))}
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-xs text-[#E0E0E0] leading-relaxed italic mb-6 min-h-[50px] font-sans">
+                    "{rev.review}"
+                  </p>
+
+                  {/* User Profile */}
+                  <div className="flex items-center gap-3 border-t border-[#2D2D2D] pt-4 mt-auto">
+                    {/* Initials Profile Circle */}
+                    <div className="w-10 h-10 rounded-full bg-secondary/10 border border-secondary/35 flex items-center justify-center text-secondary font-heading font-black text-md shrink-0">
+                      {initials}
+                    </div>
+                    <div className="text-left leading-tight flex-1 min-w-0">
+                      <h4 className="font-heading font-black text-sm text-white uppercase tracking-wider truncate">
+                        {rev.name}
+                      </h4>
+                      <span className="text-[10px] text-[#A1A1AA] truncate block">
+                        {rev.role} • {rev.college}
+                      </span>
+                    </div>
+                    
+                    {/* Badge */}
+                    <span className="text-[8px] font-heading font-black tracking-widest uppercase px-2.5 py-1 rounded-xl bg-secondary/15 text-secondary border border-secondary/20 shrink-0">
+                      {rev.badge}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Animated Statistics */}
+          <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <AnimatedStatCard value="25K+" label="Projects Generated" />
+            <AnimatedStatCard value="15K+" label="Students" />
+            <AnimatedStatCard value="250+" label="Universities" />
+            <AnimatedStatCard value="98%" label="Success Rate" />
           </div>
-          {/* Indicator Dots */}
-          <div className="flex justify-center gap-1.5 mt-4">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveTestimonial(i)}
-                className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-colors duration-300 ${
-                  activeTestimonial === i ? 'bg-secondary' : 'bg-border'
-                }`}
-              />
-            ))}
+
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-24 relative z-20 text-center border-t border-border bg-[#121212]">
+        <div className="max-w-4xl mx-auto px-6 space-y-6">
+          <h2 className="font-heading text-title md:text-6xl font-black text-white uppercase tracking-wide leading-none">
+            Ready to Build Something Legendary?
+          </h2>
+          <p className="text-xs sm:text-sm text-[#A1A1AA] max-w-md mx-auto leading-relaxed font-sans">
+            Join thousands of students already building the future with ProjectPilot.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 w-full max-w-md mx-auto">
+            <motion.button
+              onClick={() => navigate('/auth?tab=register')}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(196, 154, 74, 0.65)" }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto px-8 py-4 rounded-[18px] text-xs font-heading font-black tracking-widest uppercase bg-gradient-to-r from-secondary to-[#E47A2E] text-white transition-all duration-300 shadow-hud cursor-pointer select-none border-none outline-none flex items-center justify-center gap-2"
+            >
+              Start Building <ArrowRight size={14} />
+            </motion.button>
+            <motion.button
+              onClick={() => navigate('/auth?tab=login')}
+              whileHover={{ scale: 1.05, backgroundColor: "rgba(224, 216, 200, 0.15)", boxShadow: "0 0 20px rgba(224, 216, 200, 0.25)" }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto px-8 py-4 rounded-[18px] text-xs font-heading font-black tracking-widest uppercase border-2 border-[#E0D8C8] text-[#E0D8C8] bg-transparent transition-all duration-300 cursor-pointer select-none outline-none flex items-center justify-center"
+            >
+              Explore Projects
+            </motion.button>
           </div>
         </div>
       </section>
 
-
-
-      {/* Los Santos Skyline Footer Vector */}
-      <footer className="w-full relative z-20 pointer-events-none mt-12 text-[#C49A4A]/10 dark:text-[#18230D]/20 border-t border-border bg-card/40 pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="font-heading font-black text-sm tracking-wider uppercase text-muted">
-            PROJECTPILOT © {new Date().getFullYear()}
-          </span>
-          <span className="text-[10px] font-bold tracking-[0.25em] text-accent-orange font-sans uppercase">
-            Los Santos HQ
-          </span>
+      {/* Redesigned Premium Footer */}
+      <footer className="w-full relative z-20 border-t border-border bg-[#121212] pt-16 pb-8 overflow-hidden">
+        
+        {/* Animated stars and skyline inside footer background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          {/* Skyline */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 opacity-[0.06] select-none">
+            <svg className="w-full h-full min-w-[1200px]" viewBox="0 0 1200 100" preserveAspectRatio="none" fill="#C49A4A">
+              <path d="M 0 100 L 0 80 L 15 80 L 15 90 L 30 90 L 30 70 L 45 70 L 45 85 L 60 85 L 60 60 L 80 60 L 80 100 L 120 100 L 120 75 L 140 75 L 140 90 L 160 90 L 160 50 L 190 50 L 190 100 L 220 100 L 220 85 L 240 85 L 240 70 L 270 70 L 270 100 L 310 100 L 310 55 L 340 55 L 340 100 L 400 100 L 400 65 L 430 65 L 430 80 L 450 80 L 450 100 L 500 100 L 500 45 L 530 45 L 530 100 L 600 100 L 600 70 L 620 70 L 620 90 L 650 90 L 650 40 L 680 40 L 680 100 L 750 100 L 750 60 L 780 60 L 780 100 L 850 100 L 850 50 L 880 50 L 880 75 L 900 75 L 900 100 L 980 100 L 980 65 L 1020 65 L 1020 80 L 1050 80 L 1050 100 L 1120 100 L 1120 55 L 1150 55 L 1150 100 L 1200 100 Z" />
+            </svg>
+          </div>
+          {/* Stars */}
+          <div className="absolute top-[10%] left-[15%] w-1 h-1 bg-white rounded-full animate-pulse" />
+          <div className="absolute top-[25%] left-[45%] w-1.5 h-1.5 bg-white rounded-full animate-ping" style={{ animationDuration: '4s' }} />
+          <div className="absolute top-[15%] right-[25%] w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute top-[35%] right-[8%] w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 overflow-hidden opacity-30 select-none">
-          <svg className="w-full h-full min-w-[1200px]" viewBox="0 0 1200 100" preserveAspectRatio="none" fill="currentColor">
-            <path d="M 0 100 L 0 80 L 15 80 L 15 90 L 30 90 L 30 70 L 45 70 L 45 85 L 60 85 L 60 60 L 80 60 L 80 100 L 120 100 L 120 75 L 140 75 L 140 90 L 160 90 L 160 50 L 190 50 L 190 100 L 220 100 L 220 85 L 240 85 L 240 70 L 270 70 L 270 100 L 310 100 L 310 55 L 340 55 L 340 100 L 400 100 L 400 65 L 430 65 L 430 80 L 450 80 L 450 100 L 500 100 L 500 45 L 530 45 L 530 100 L 600 100 L 600 70 L 620 70 L 620 90 L 650 90 L 650 40 L 680 40 L 680 100 L 750 100 L 750 60 L 780 60 L 780 100 L 850 100 L 850 50 L 880 50 L 880 75 L 900 75 L 900 100 L 980 100 L 980 65 L 1020 65 L 1020 80 L 1050 80 L 1050 100 L 1120 100 L 1120 55 L 1150 55 L 1150 100 L 1200 100 Z" />
-          </svg>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-12">
+          
+          {/* Column 1: Logo & Info */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-1 space-y-4 text-left">
+            <div className="font-heading font-black text-2xl tracking-wider text-white">
+              PROJECT<span className="text-secondary">PILOT</span>
+            </div>
+            <div className="text-[10px] font-heading font-black tracking-widest text-[#E47A2E] uppercase">
+              Build Bigger. Build Smarter.
+            </div>
+            <p className="text-xs text-[#A1A1AA] leading-relaxed font-sans">
+              Discover customized proposals, structure technical scopes, generate learning templates, and build portfolio projects.
+            </p>
+          </div>
+
+          {/* Column 2: Product */}
+          <div className="space-y-3 text-left">
+            <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Product</h4>
+            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
+              <li><a href="#" className="hover:text-secondary transition">Home</a></li>
+              <li><a href="#features" className="hover:text-secondary transition">Dashboard</a></li>
+              <li><a href="#how-it-works" className="hover:text-secondary transition">Projects</a></li>
+              <li><a href="#" className="hover:text-secondary transition">AI Suggestions</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Pricing</a></li>
+            </ul>
+          </div>
+
+          {/* Column 3: Resources */}
+          <div className="space-y-3 text-left">
+            <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Resources</h4>
+            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
+              <li><a href="#" className="hover:text-secondary transition">Synopses</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Prompts</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Roadmaps</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Documentation</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Blog</a></li>
+              <li><a href="#" className="hover:text-secondary transition">FAQs</a></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Community */}
+          <div className="space-y-3 text-left">
+            <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Community</h4>
+            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
+              <li><a href="#" className="hover:text-secondary transition">GitHub</a></li>
+              <li><a href="#" className="hover:text-secondary transition">LinkedIn</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Discord</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Twitter</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Instagram</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Newsletter</a></li>
+            </ul>
+          </div>
+
+          {/* Column 5: Contact / Legal */}
+          <div className="space-y-3 text-left">
+            <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Contact</h4>
+            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
+              <li><a href="#" className="hover:text-secondary transition">Email Support</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Help Center</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Terms of Use</a></li>
+              <li><a href="#" className="hover:text-secondary transition">Cookie Preferences</a></li>
+            </ul>
+          </div>
+
         </div>
+
+        {/* Bottom Bar */}
+        <div className="max-w-7xl mx-auto px-6 border-t border-[#2D2D2D] pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-sans font-medium text-[#A1A1AA] w-full">
+          <div>© {new Date().getFullYear()} ProjectPilot. All rights reserved.</div>
+          <div className="flex items-center gap-1">Built with <span className="text-[#D64545] animate-pulse">❤️</span> by Gurmehak</div>
+          <div className="text-secondary font-heading font-black tracking-widest uppercase">🌴 Los Santos Tech HQ</div>
+        </div>
+
       </footer>
 
     </div>
