@@ -604,25 +604,54 @@ export default function LandingPage() {
           {/* Column 2: Product */}
           <div className="space-y-3 text-left">
             <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Product</h4>
-            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
-              <li><a href="#" className="hover:text-secondary transition">Home</a></li>
-              <li><a href="#features" className="hover:text-secondary transition">Dashboard</a></li>
-              <li><a href="#how-it-works" className="hover:text-secondary transition">Projects</a></li>
-              <li><a href="#" className="hover:text-secondary transition">AI Suggestions</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Pricing</a></li>
+            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA] flex flex-col items-start">
+              <li>
+                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Home
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Dashboard
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Projects
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  AI Suggestions
+                </button>
+              </li>
             </ul>
           </div>
 
           {/* Column 3: Resources */}
           <div className="space-y-3 text-left">
             <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Resources</h4>
-            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
-              <li><a href="#" className="hover:text-secondary transition">Synopses</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Prompts</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Roadmaps</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Documentation</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Blog</a></li>
-              <li><a href="#" className="hover:text-secondary transition">FAQs</a></li>
+            <ul className="space-y-2 text-xs font-sans text-[#A1A1AA] flex flex-col items-start">
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Synopses
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Prompts
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Roadmaps
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/auth?tab=login')} className="hover:text-secondary transition bg-transparent border-none p-0 outline-none text-left cursor-pointer">
+                  Documentation
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -630,24 +659,16 @@ export default function LandingPage() {
           <div className="space-y-3 text-left">
             <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Community</h4>
             <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
-              <li><a href="#" className="hover:text-secondary transition">GitHub</a></li>
-              <li><a href="#" className="hover:text-secondary transition">LinkedIn</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Discord</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Twitter</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Instagram</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Newsletter</a></li>
+              <li><a href="https://github.com/magy070" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/gurmehakdeep-singh" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition">LinkedIn</a></li>
             </ul>
           </div>
 
-          {/* Column 5: Contact / Legal */}
+          {/* Column 5: Contact */}
           <div className="space-y-3 text-left">
             <h4 className="font-heading font-black text-[#E0E0E0] tracking-wider text-xs uppercase">Contact</h4>
             <ul className="space-y-2 text-xs font-sans text-[#A1A1AA]">
-              <li><a href="#" className="hover:text-secondary transition">Email Support</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Help Center</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Terms of Use</a></li>
-              <li><a href="#" className="hover:text-secondary transition">Cookie Preferences</a></li>
+              <li><a href="https://www.linkedin.com/in/gurmehakdeep-singh" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition">LinkedIn</a></li>
             </ul>
           </div>
 
