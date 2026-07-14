@@ -452,47 +452,78 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="max-w-4xl mx-auto px-6 py-24 relative z-20">
-        <div className="text-center mb-16">
-          <h2 className="font-heading text-title md:text-5xl font-black text-text uppercase tracking-wide">
-            How It Works
-          </h2>
-          <p className="mt-4 text-muted text-sm">
-            From zero to developer prompts in six easy steps.
-          </p>
+      {/* How It Works Section (Vinewood Sunset Backdrop) */}
+      <section id="how-it-works" className="min-h-screen w-full relative overflow-hidden flex flex-col justify-center items-center py-24 z-20 font-sans border-y border-border text-center">
+        {/* Background zoom container */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <motion.img 
+            initial={{ scale: 1.04, opacity: 0.3 }}
+            whileInView={{ scale: 1.01, opacity: 0.55 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 1.6, ease: "easeOut" }}
+            src="/gta_vinewood.jpg" 
+            alt="Vinewood Hills Sunset" 
+            className="w-full h-full object-cover animate-cinematic-vinewood select-none"
+            loading="lazy"
+          />
+          {/* Layer 1: Dark overlay */}
+          <div className="absolute inset-0 bg-black/55" />
+          
+          {/* Layer 2: Sunset orange tint */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent-orange/15 via-transparent to-accent-orange/10 mix-blend-color-burn" />
+          
+          {/* Layer 3: Vignette & Radial shadows */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.7)_100%)]" />
+
+          {/* Clouds */}
+          <div className="absolute top-[10%] left-0 w-72 h-10 bg-white/5 blur-3xl rounded-full animate-cloud-slow" />
         </div>
 
-        {/* Timeline block */}
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={stagger}
-          className="relative border-l-2 border-border ml-4 md:ml-32 pl-8 space-y-12"
-        >
-          {steps.map((step, idx) => (
-            <motion.div key={idx} variants={fadeUp} className="relative group">
-              {/* Point Node */}
-              <div className="absolute left-[-42px] top-1 w-6 h-6 rounded-full bg-background border-2 border-secondary flex items-center justify-center group-hover:border-accent-orange transition duration-300">
-                <span className="w-2.5 h-2.5 rounded-full bg-secondary group-hover:bg-accent-orange transition"></span>
-              </div>
-              
-              <span className="absolute left-[-160px] top-1 text-xs font-heading font-black tracking-widest text-muted hidden md:block w-28 text-right">
-                STEP 0{idx + 1}
-              </span>
-              
-              <div>
-                <h4 className="font-heading font-black text-lg text-text group-hover:text-secondary transition duration-200 uppercase tracking-wide">
-                  {step}
-                </h4>
-                <p className="text-xs text-muted mt-1 leading-relaxed font-sans">
-                  Automatically mapped and stored inside your cloud sync history vault.
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Contents Container */}
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[18px] border border-secondary/30 bg-black/45 backdrop-blur-sm text-[9px] font-bold uppercase tracking-widest text-secondary shadow-hud mx-auto">
+              🎬 MISSION PROTOCOL
+            </div>
+            <h2 className="font-heading text-title md:text-6xl font-black text-text uppercase tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]">
+              How It Works
+            </h2>
+            <p className="text-sm text-muted max-w-md mx-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+              From zero to developer prompts in six easy steps.
+            </p>
+          </div>
+
+          {/* Timeline block */}
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={stagger}
+            className="relative border-l-2 border-secondary/30 ml-4 md:ml-32 pl-8 space-y-12 text-left"
+          >
+            {steps.map((step, idx) => (
+              <motion.div key={idx} variants={fadeUp} className="relative group">
+                {/* Point Node */}
+                <div className="absolute left-[-42px] top-1 w-6 h-6 rounded-full bg-card border-2 border-secondary flex items-center justify-center group-hover:border-accent-orange transition duration-300">
+                  <span className="w-2.5 h-2.5 rounded-full bg-secondary group-hover:bg-accent-orange transition"></span>
+                </div>
+                
+                <span className="absolute left-[-160px] top-1 text-xs font-heading font-black tracking-widest text-muted hidden md:block w-28 text-right">
+                  STEP 0{idx + 1}
+                </span>
+                
+                <div>
+                  <h4 className="font-heading font-black text-lg text-text group-hover:text-secondary transition duration-200 uppercase tracking-wide">
+                    {step}
+                  </h4>
+                  <p className="text-xs text-muted mt-1 leading-relaxed font-sans">
+                    Automatically mapped and stored inside your cloud sync history vault.
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </section>
 
       {/* Testimonials Carousel (GTA Character Style Quote Cards) */}
@@ -540,139 +571,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Vinewood Showcase Section */}
-      <section className="h-[90vh] min-h-[600px] w-full relative overflow-hidden flex flex-col justify-center items-center z-20 font-sans border-t border-border text-center">
-        {/* Background zoom container */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <motion.img 
-            initial={{ scale: 1.04, opacity: 0.3 }}
-            whileInView={{ scale: 1.01, opacity: 0.5 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1.6, ease: "easeOut" }}
-            src="/gta_vinewood.jpg" 
-            alt="Vinewood Hills Sunset" 
-            className="w-full h-full object-cover animate-cinematic-vinewood select-none"
-            loading="lazy"
-          />
-          {/* Layer 1: Dark overlay */}
-          <div className="absolute inset-0 bg-black/45" />
-          
-          {/* Layer 2: Sunset gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-accent-orange/10 via-transparent to-accent-orange/15 mix-blend-color-dodge" />
-          
-          {/* Layer 3: Vignette & Radial shadows */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.65)_100%)]" />
 
-          {/* Clouds */}
-          <div className="absolute top-[20%] left-[10%] w-72 h-10 bg-white/5 blur-3xl rounded-full animate-cloud-slow" />
-          
-          {/* Very small birds in the distance */}
-          <div className="absolute inset-0 animate-bird-flight opacity-30 scale-50">
-            <svg className="w-10 h-10 text-black" viewBox="0 0 100 100">
-              <path d="M10 50 C 30 30, 45 45, 50 50 C 55 45, 70 30, 90 50 C 70 42, 55 48, 50 50 C 45 48, 30 42, 10 50 Z" fill="currentColor" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Ambient floating dust particles */}
-        <div className="absolute top-[40%] right-[30%] w-1.5 h-1.5 bg-accent-orange rounded-full animate-ping" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-[35%] left-[25%] w-2 h-2 bg-secondary/20 rounded-full animate-pulse" />
-
-        {/* Content container */}
-        <div className="relative z-10 max-w-4xl mx-auto px-6 space-y-6 flex flex-col items-center">
-          
-          {/* Vinewood badge marker */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[18px] border border-secondary/30 bg-black/45 backdrop-blur-sm text-[9px] font-bold uppercase tracking-widest text-secondary shadow-hud mx-auto"
-          >
-            🎬 VINEWOOD HILLS SECTOR
-          </motion.div>
-
-          {/* Heading with Letter Stagger Reveal */}
-          <motion.h2 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.04 } }
-            }}
-            className="font-heading text-4xl sm:text-5xl md:text-7xl font-black text-text uppercase tracking-wide drop-shadow-[0_4px_12px_rgba(0,0,0,0.65)] flex flex-wrap justify-center gap-x-3.5 leading-none"
-          >
-            {"Welcome to Los Santos Tech HQ.".split(" ").map((word, wordIdx) => (
-              <span key={wordIdx} className="inline-block whitespace-nowrap">
-                {word.split("").map((char, charIdx) => (
-                  <motion.span
-                    key={charIdx}
-                    variants={{
-                      hidden: { opacity: 0, y: 15 },
-                      visible: { opacity: 1, y: 0 }
-                    }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="inline-block"
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </span>
-            ))}
-          </motion.h2>
-
-          {/* Subheading */}
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="text-xs sm:text-sm text-muted/95 max-w-xl mx-auto font-sans leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-          >
-            Every legendary portfolio begins with a single project. <br className="hidden sm:inline" />
-            Build yours with ProjectPilot.
-          </motion.p>
-
-          {/* Action buttons with Staggered Entrance */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.15 } }
-            }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6 w-full max-w-xs sm:max-w-md mx-auto"
-          >
-            {/* Start Building button */}
-            <motion.button
-              variants={fadeUp}
-              onClick={() => navigate('/auth?tab=register')}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(58, 95, 11, 0.7)" }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-4 rounded-[18px] text-xs font-heading font-black tracking-widest uppercase bg-gradient-to-r from-[#3A5F0B] to-[#557F1C] hover:from-[#497512] hover:to-[#639226] text-white transition-all duration-300 shadow-hud cursor-pointer select-none border-none outline-none flex items-center justify-center gap-2"
-            >
-              Start Building <ArrowRight size={14} />
-            </motion.button>
-            
-            {/* View Dashboard button */}
-            <motion.button
-              variants={fadeUp}
-              onClick={() => navigate('/dashboard')}
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(224, 216, 200, 0.15)", boxShadow: "0 0 20px rgba(224, 216, 200, 0.25)" }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-4 rounded-[18px] text-xs font-heading font-black tracking-widest uppercase border-2 border-[#E0D8C8] text-[#E0D8C8] bg-transparent transition-all duration-300 cursor-pointer select-none outline-none flex items-center justify-center"
-            >
-              View Dashboard
-            </motion.button>
-          </motion.div>
-
-        </div>
-
-        {/* Transition black gradient fading seamlessly into the footer */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent pointer-events-none z-10" />
-      </section>
 
       {/* Los Santos Skyline Footer Vector */}
       <footer className="w-full relative z-20 pointer-events-none mt-12 text-[#C49A4A]/10 dark:text-[#18230D]/20 border-t border-border bg-card/40 pt-16 pb-8">
