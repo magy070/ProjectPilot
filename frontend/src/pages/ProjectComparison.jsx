@@ -57,7 +57,7 @@ export default function ProjectComparison() {
   ];
 
   return (
-    <div className="bg-background min-h-screen text-text py-12 relative overflow-hidden font-sans transition-colors duration-300">
+    <div className="bg-background min-h-screen text-text pt-28 pb-12 relative overflow-hidden font-sans transition-colors duration-300">
       
       {/* Background gradients */}
       <div className="absolute inset-0 pointer-events-none z-0">
